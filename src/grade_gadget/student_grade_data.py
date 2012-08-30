@@ -16,5 +16,13 @@ class Student(object):
         self.combo = combo
         self.advisor = advisor
         self.username=username
+        self.grades = []
         print "Done creating " + self.firstName + " " + self.lastName
-        
+#        
+#    def addGrade(self):
+#        
+#        
+#    
+#    class Grade(object):
+#        def __init__(self, subject, mtm, etm,):
+#            

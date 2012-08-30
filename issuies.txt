@@ -1,0 +1,5 @@
+possible problems
+the whole, ethnicity is actually combo thing? very strange
+how are we going to get advisors
+term naming is not set, they can be named anything, but I'm statically referencing it in the code
+the whole bit with getting the courses is not very optimized
