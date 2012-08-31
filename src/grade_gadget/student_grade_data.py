@@ -25,4 +25,6 @@ class Student(object):
 #    
 #    class Grade(object):
 #        def __init__(self, subject, mtm, etm,):
-#            
+#
+    def __str__(self):
+        return self.firstName + " " + self.lastName + ", Combo: " + self.combo
