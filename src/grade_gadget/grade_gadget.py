@@ -8,7 +8,9 @@ from mmap import mmap,ACCESS_READ
 from xlrd import open_workbook,empty_cell
 import os.path
 import grade_gadget_methods
+import prince_report_gen
 from student_grade_data import Student
+
 from user_inputs import *
 #this stuff should be collected, maybe as part of the gui
 
@@ -32,15 +34,15 @@ reportsheet_index_dic = grade_gadget_methods.makeIndexDict(termgradesheet,
                                                            {"Section ID":-1,"Student ID":-1,ETM:-1,FINAL:-1})
 
 #make some students
-students = []
+students = {}
 for row in range (1,peoplesheet.nrows):
     curuser = peoplesheet.cell(row,student_index_dic["User Name"]).value
     if curuser not in usernamesForSheets:
         continue
-    students.append(Student(peoplesheet.cell(row,student_index_dic["First Name"]).value,
+    students[curuser] = Student(peoplesheet.cell(row,student_index_dic["First Name"]).value,
                              peoplesheet.cell(row,student_index_dic["Last Name"]).value,
                              curuser,
-                             peoplesheet.cell(row,student_index_dic[COMBO]).value))
+                             peoplesheet.cell(row,student_index_dic[COMBO]).value)
 #this gets a dictionary that maps the teacher's username to the name on the report card
 teachers = grade_gadget_methods.getMapOfTeacherUsernameToGradeName(groupssheet, peoplesheet, student_index_dic)
 
@@ -54,3 +56,18 @@ for c in classes:
 for s in students:
     print s
 #okay, now going to add the grade information
+for row in range(1,termgradesheet.nrows):
+    sectionID = termgradesheet.cell(row,reportsheet_index_dic["Section ID"]).value
+    studentun = termgradesheet.cell(row,reportsheet_index_dic["Student ID"]).value
+    final = termgradesheet.cell(row,reportsheet_index_dic[FINAL]).value
+    etm = termgradesheet.cell(row,reportsheet_index_dic[ETM]).value
+    ## WE WILL NEED SOMETHING FOR COMMENTS AND WHAT ABOUT MIDTERM?!?!?!
+    students[studentun].addGrade(classes[sectionID], "NEEDS TO BE IMPLEMENTED", etm, final, "NEEDS TO BE IMPLEMENTED")
+    print students[studentun]
+
+#now we need to generate the file for the sheets
+prince_report_gen.generatePrinceReports(students)
+
+
+
+#and command line run it through prince

@@ -12,3 +12,6 @@ TEACHERS = "Teachers"
 COMBO = "Ethnicity"
 ETM = "Final Grades Term 2 / End of Term Mark"
 FINAL = "Final Grades Term 2 / Final Test Grade"
+MTM = None
+COMMENT = None
+HTML_OUTPUT_FOLDER = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/generated/"
