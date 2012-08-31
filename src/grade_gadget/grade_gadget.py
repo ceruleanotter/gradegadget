@@ -9,8 +9,9 @@ from xlrd import open_workbook,empty_cell
 import os.path
 from student_grade_data import Student
 from course_section import Section
-excel_file_location = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/excel_sheets_from_schooltool/"
 
+#this stuff should be collected, maybe as part of the gui
+excel_file_location = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/excel_sheets_from_schooltool/"
 year = 2012
 term = 2
 group ="Students"
@@ -20,14 +21,11 @@ school_excel_file = excel_file_location + "export.xls"
 grades_workbook = open_workbook(grades_excel_file)
 school_workbook = open_workbook(school_excel_file)
 
+#getting all the sheets
 termgradesheet = grades_workbook.sheet_by_name("term-"+str(term))
-print termgradesheet
 groupssheet = school_workbook.sheet_by_name("Groups")
-print groupssheet
 peoplesheet = school_workbook.sheet_by_name("Persons")
-print peoplesheet
 sectionsheet = school_workbook.sheet_by_name("Sections " +str(year) + " " + "term-" + str(term))
-print sectionsheet
 
 
 #go through groupssheet and get the list of student
@@ -131,6 +129,35 @@ for col in range (termgradesheet.ncols):
         
 print grade_cols
 #need to come up with class averages
+
+prevclassID = termgradesheet.cell(1,grade_cols["Section ID"]).value
+cursum= int(termgradesheet.cell(1,grade_cols["Final Grades Term 2 / End of Term Mark"]).value)
+curNumCounted = 1
+curMissingGrade = False
+for row in range(2,termgradesheet.nrows):
+    curclassID = termgradesheet.cell(row,grade_cols["Section ID"]).value
+    if curclassID != prevclassID :
+        if curMissingGrade:
+            classes[prevclassID].grade_average = "MISSING"            
+        else:
+            ave = int(cursum)/int(curNumCounted)
+            classes[prevclassID].grade_average = ave
+        cursum = 0
+        curNumCounted = 0
+        curMissingGrade = False
+        prevclassID = curclassID
+        continue
+    #print termgradesheet.cell(row,grade_cols["Final Grades Term 2 / End of Term Mark"]).value
+    curgrade = termgradesheet.cell(row,grade_cols["Final Grades Term 2 / End of Term Mark"]).value
+    prevclassID = curclassID
+    if curgrade is empty_cell.value:
+        curMissingGrade = True
+        continue
+    cursum = cursum + int(curgrade)
+    curNumCounted += 1
+
+for c in classes:
+    print classes[c]
 
 #okay, now going to add the grade information
 
