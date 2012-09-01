@@ -41,5 +41,20 @@ class Student(object):
             self.average = ave
             self.comment = comment
             self.teacher = teacher
+            self.letter = self.getLetter()
+            
+        def getLetter(self):
+            if self.etm >= 90 :
+                return "A"
+            elif self.etm >= 80 :
+                return "B"
+            elif self.etm >= 70 :
+                return "C"
+            elif self.etm >= 60 :
+                return "D"
+            else:
+                return "F"
+            
+                
         def __str__(self):
             return self.subject + ": " + str(self.mtm) + "|" + str(self.final) + "|" + str(self.etm) + "|" + str(self.average)

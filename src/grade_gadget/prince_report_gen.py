@@ -3,23 +3,14 @@ Created on Aug 31, 2012
 
 @author: Lyla
 '''
-from xml.dom.minidom import parseString
 from user_inputs import *
+from jinja2 import Environment, FileSystemLoader
+env = Environment(loader=FileSystemLoader(TEMPLATES_FOLDER))
+
 def generatePrinceReports(students):
+    print ":)"
+    template = env.get_template("outer_template.xhtml")
+    print template.render(students=students,year=year,term=term)
 
-    doc = parseString("""<html>
-        <head>
-            <script type="text/javascript">
-                var a = 'I love &amp;aacute; letters'
-            </script>
-        </head>
-        <body>
-            <h1>And I like the fact that 3 &gt; 1</h1>
-        </body>
-        </html>""")
 
-    
-    
-    with open("reports_for_"+group+"_term_"+term+"_"+year+".xhtml", "w") as f:
-        f.write( doc.toxml() )
     

@@ -207,8 +207,8 @@ tr#grades table tr td.grades_header_comment {
 <table id="main_table">
 	<tr id="logos">
 		<img id="logo" src="rwanda_girls_resize.jpg"/>
-		<span class="title">Gashora Girls Academy of Science and Technology</span>
-		End of Term 3 Report
+		<span class="title">EXAMPLE Gashora Girls Academy of Science and Technology</span>
+		End of Term 3 Report EXAMPLE
 		<br/>
 		
 	</tr> <!--end of logo -->
@@ -321,99 +321,13 @@ tr#grades table tr td.grades_header_comment {
 			
 </table> <!-- end of main_table -->
 
-<table id="main_table">
-	<tr id="logos">
-		<img id="logo" src="rwanda_girls_resize.jpg"/>
-		<span class="title">Gashora Girls Academy of Science and Technology</span>
-		End of Term 3 Report
-		<br/>
-		
-	</tr> <!--end of logo -->
-	
-	<tr id="student_info">
-		<table>
-			<tr>
-				<td id="student_name"><span class="category">Name:</span> Lyla Fujiwara</td>
-				<td id="student_combo"><span class="category">Combination:</span>CEM</td>
-				<td id="student_gpa"><span class="category">GPA:</span>3.85</td>
-				<td id="student_advisor"><span class="category">Advisor:</span>Mr.Monkey</td>
-			</tr>
-		</table>
-	</tr> <!--end of student_info-->
-	
-	<tr id="grades">
-		<table>
-			<thead id="grades_header">
-				<th class="grades_header_subject">Subject</th>
-				<th class="grades_header_mtm">MTM</th>
-				<th class="grades_header_tem">TEM</th>
-				<th class="grades_header_etm">ETM</th>
-				<th class="grades_header_classav">Class Ave.</th>
-				<th class="grades_header_letter">Letter</th>
-				<th class="grades_header_comment">Comment</th>
-				<th class="grades_header_teacher">Teacher</th>				
-			</thead>
-			<tbody>
-				<tr id="grades_0" class="grades_box">
-					<td class="grades_header_subject">Computer</td>
-					<td class="grades_header_mtm">80</td>
-					<td class="grades_header_tem">88</td>
-					<td class="grades_header_etm">90</td>
-					<td class="grades_header_classav">83</td>
-					<td class="grades_header_letter">A</td>
-					<td class="grades_header_comment">Lyla is a great student. She always raises her hand to volunteer information and teaches other classmates.</td>
-					<td class="grades_header_teacher">Mr.Robot</td>
-				</tr> <!--end of grades_box 0-->			
-				
-				<tr id="grades_1" class="grades_box odd">
-					<td class="grades_header_subject">Computer</td>
-					<td class="grades_header_mtm">80</td>
-					<td class="grades_header_tem">88</td>
-					<td class="grades_header_etm">90</td>
-					<td class="grades_header_classav">83</td>
-					<td class="grades_header_letter">A</td>
-					<td class="grades_header_comment">Lyla is a great student. She always raises her hand to volunteer information and teaches other classmates.</td>
-					<td class="grades_header_teacher">Mr.Robot</td>
-				</tr> <!--end of grades_box 1-->	
 
-				<tr id="grades_2" class="grades_box">
-					<td class="grades_header_subject">Computer</td>
-					<td class="grades_header_mtm">80</td>
-					<td class="grades_header_tem">88</td>
-					<td class="grades_header_etm">90</td>
-					<td class="grades_header_classav">83</td>
-					<td class="grades_header_letter">A</td>
-					<td class="grades_header_comment">Lyla is a great student. She always raises her hand to volunteer information and teaches other classmates.</td>
-					<td class="grades_header_teacher">Mr.Robot</td>
-				</tr> <!--end of grades_box 1-->	
-				
-			</tbody> 
-		</table>
-	</tr> <!--end of grades-->
-		
-	<tr id="grade_info">
-		<span class="category">KEY TO ABBREVIATIONS AND LETTER GRADES</span>
-		<br/>
-		MTM = Midterm Mark
-		ETM = End of Term Mark
-		90 – 100 = A
-		70 – 79 = C
-		50 – 59 = E
-		TEM = Term Exam Mark
-		AVG = Average
-		80 – 89 = B
-		60 – 69 = D
-		00 – 49 = F		
-		<br/>
-		ACADEMICS DEAN, LYDIA TUMUHAIRWE 
-	</tr> <!--end of grade_info-->
-	
-</table> <!-- end of main_table -->
+{% for s in students %}
+	{% block student scoped %}
+		this is the block for student
+		{{ s }} and {{ year }} and {{ term }}
+	{% endblock %}
+{% endfor %}
 
 </body>
 </html>
-
-
-
-
-
