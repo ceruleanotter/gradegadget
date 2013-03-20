@@ -17,7 +17,11 @@ class Section(object):
         #remove any parenthesis and anything inbetween
         sectionName = re.sub(r"\(.*\)", '', sectionName)        
         #remove any words with more then two capitol letters in a row
-        sectionName = re.sub(r"[A-Z/]{2,}", '', sectionName)        
+        sectionName = re.sub(r"[A-Z/]{2,}", '', sectionName)
+        #remove Term followed by a number
+        sectionName = re.sub(r"Term [0-9]{1}", '', sectionName)
+        #remove S and anything with a number   
+        sectionName = re.sub(r"S[0-9]{1,}", '', sectionName)
         #remove trailing spaces
         sectionName = sectionName.strip()
         

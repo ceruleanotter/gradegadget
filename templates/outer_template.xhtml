@@ -322,11 +322,59 @@ tr#grades table tr td.grades_header_comment {
 </table> <!-- end of main_table -->
 
 
-{% for s in students %}
-	{% block student scoped %}
-		this is the block for student
-		{{ s }} and {{ year }} and {{ term }}
-	{% endblock %}
+{% for studentun in students %}
+	{% set s = students[studentun] %}
+	<table id="main_table">
+		<tr id="logos">
+			<img id="logo" src="rwanda_girls_resize.jpg"/>
+			<span class="title">Gashora Girls Academy of Science and Technology</span>
+			End of Term {{ term }} Report, {{ year }}
+			<br/>
+			
+		</tr> <!--end of logo -->
+		
+		<tr id="student_info">
+			<table>
+				<tr>
+					<td id="student_name"><span class="category">Name:</span> {{ s.firstName }} {{ s.lastName }}</td>
+					<td id="student_combo"><span class="category">Combination:</span>{{ s.combo }}</td>
+					<td id="student_gpa"><span class="category">GPA:</span>{{ s.gpa }}</td>
+					<td id="student_advisor"><span class="category">Advisor:</span>{{ s.advisor }}</td>
+				</tr>
+			</table>
+		</tr> <!--end of student_info-->
+		
+		<tr id="grades">
+			<table>
+				<thead id="grades_header">
+					<th class="grades_header_subject">Subject</th>
+					<th class="grades_header_mtm">MTM</th>
+					<th class="grades_header_tem">TEM</th>
+					<th class="grades_header_etm">ETM</th>
+					<th class="grades_header_classav">Class Ave.</th>
+					<th class="grades_header_letter">Letter</th>
+					<th class="grades_header_comment">Comment</th>
+					<th class="grades_header_teacher">Teacher</th>				
+				</thead>
+				<tbody>
+				{% for grade in s.grades %}
+					<tr id="grades_{{ loop.index }}" class="grades_box {{ loop.cycle('odd', 'even') }}">
+							<td class="grades_header_subject">{{ grade.subject }}</td>
+							<td class="grades_header_mtm">{{ grade.mtm }}</td>
+							<td class="grades_header_tem">{{ grade.final }}</td>
+							<td class="grades_header_etm">{{ grade.etm }}</td>
+							<td class="grades_header_classav">{{ grade.average }}</td>
+							<td class="grades_header_letter">{{ grade.letter }}</td>
+							<td class="grades_header_comment">{{ grade.comment }}</td>
+							<td class="grades_header_teacher">{{ grade.teacher }}</td>
+					</tr> <!--end of grades_box {{ loop.index }} -->
+				{% endfor %}
+	
+				</tbody> 
+			</table>
+		</tr> <!--end of grades-->
+				
+	</table> <!-- end of main_table -->
 {% endfor %}
 
 </body>

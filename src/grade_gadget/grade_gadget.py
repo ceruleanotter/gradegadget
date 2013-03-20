@@ -14,7 +14,7 @@ from student_grade_data import Student
 from user_inputs import *
 #this stuff should be collected, maybe as part of the gui
 
-grades_excel_file = excel_file_location + "report_sheets_"+str(year)+".xls"
+grades_excel_file = excel_file_location + "report_sheets_"+str(year)+"_term-"+str(term)+".xls"
 school_excel_file = excel_file_location + "export.xls"
 grades_workbook = open_workbook(grades_excel_file)
 school_workbook = open_workbook(school_excel_file)
@@ -31,7 +31,7 @@ usernamesForSheets = grade_gadget_methods.getGroupMembers(group, groupssheet)
 #make a dictionary that matches the appropriate column types to their indexes in the sheet
 student_index_dic = grade_gadget_methods.makeIndexDict(peoplesheet, {"User Name":-1,"First Name":-1,"Last Name":-1,COMBO:-1, "Gender":-1})
 reportsheet_index_dic = grade_gadget_methods.makeIndexDict(termgradesheet,
-                                                           {"Section ID":-1,"Student ID":-1,ETM:-1,FINAL:-1})
+                                                           {"Section ID":-1,"Student ID":-1,ETM:-1,FINAL:-1,COMMENT:-1})
 
 #make some students
 students = {}
@@ -43,12 +43,13 @@ for row in range (1,peoplesheet.nrows):
                              peoplesheet.cell(row,student_index_dic["Last Name"]).value,
                              curuser,
                              peoplesheet.cell(row,student_index_dic[COMBO]).value)
+    
 #this gets a dictionary that maps the teacher's username to the name on the report card
 teachers = grade_gadget_methods.getMapOfTeacherUsernameToGradeName(groupssheet, peoplesheet, student_index_dic)
 
 #maps the class id to a instance of section with all the correct info
 classes = grade_gadget_methods.makeClassesDic(sectionsheet, teachers)
-classes = grade_gadget_methods.calculateAveragesForClasses(classes, termgradesheet, reportsheet_index_dic)
+classes = grade_gadget_methods.calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic)
 print reportsheet_index_dic
 #need to come up with class averages
 for c in classes:
@@ -61,8 +62,9 @@ for row in range(1,termgradesheet.nrows):
     studentun = termgradesheet.cell(row,reportsheet_index_dic["Student ID"]).value
     final = termgradesheet.cell(row,reportsheet_index_dic[FINAL]).value
     etm = termgradesheet.cell(row,reportsheet_index_dic[ETM]).value
+    comment = termgradesheet.cell(row,reportsheet_index_dic[COMMENT]).value #trying this for comment
     ## WE WILL NEED SOMETHING FOR COMMENTS AND WHAT ABOUT MIDTERM?!?!?!
-    students[studentun].addGrade(classes[sectionID], "NEEDS TO BE IMPLEMENTED", etm, final, "NEEDS TO BE IMPLEMENTED")
+    students[studentun].addGrade(classes[sectionID], "NEEDS TO BE IMPLEMENTED", etm, final, comment)
     print students[studentun]
 
 #now we need to generate the file for the sheets

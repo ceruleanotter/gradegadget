@@ -12,8 +12,9 @@ def getGroupMembers(groupName, groupSheet):
     """Given a valid group sheet, returns a list of the members"""
     #got to find which row the group states
     groupRow = -1
+
     for row in range(groupSheet.nrows):
-        if groupSheet.cell(row,1).value==groupName:
+        if groupSheet.cell(row,1).value==groupName and groupSheet.cell(row+2,1).value==str(year):
             groupRow = row
             break
     print groupRow
@@ -28,6 +29,7 @@ def getGroupMembers(groupName, groupSheet):
     return names
 
 def makeIndexDict(sheet, columnNamesDic):
+    """Given a valid worksheet, returns a dictionary matching the column headers with their numeric location"""
     for col in range (sheet.ncols):
         cell = sheet.cell(0,col).value
         if cell in columnNamesDic:
@@ -73,7 +75,7 @@ def makeClassesDic(sectionSheet,teachers):
             print classes[sectionID]
     return classes
 
-def calculateAveragesForClasses(classes, termgradesheet, reportsheet_index_dic):
+def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic):
     prevclassID = termgradesheet.cell(1,reportsheet_index_dic["Section ID"]).value
     cursum= int(termgradesheet.cell(1,reportsheet_index_dic[ETM]).value)
     curNumCounted = 1
@@ -97,6 +99,6 @@ def calculateAveragesForClasses(classes, termgradesheet, reportsheet_index_dic):
         if curgrade is empty_cell.value:
             curMissingGrade = True
             continue
-        cursum = cursum + int(curgrade)
+        cursum = cursum + float(curgrade)
         curNumCounted += 1
     return classes

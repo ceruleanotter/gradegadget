@@ -4,15 +4,15 @@ Created on Aug 31, 2012
 @author: Lyla
 '''
 excel_file_location = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/excel_sheets_from_schooltool/"
-year = 2012
-term = 2
+year = 2013
+term = 1
 group ="Students"
 
 TEACHERS = "Teachers"
-COMBO = "Ethnicity"
-ETM = "Final Grades Term 2 / End of Term Mark"
-FINAL = "Final Grades Term 2 / Final Test Grade"
+COMBO = "Combination"
+ETM = "Term 1 TEST Report Sheet / ETM"
+FINAL = "Term 1 TEST Report Sheet / TEM"
 MTM = None
-COMMENT = None
+COMMENT = "Term 1 TEST Report Sheet / Comment"
 TEMPLATES_FOLDER = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/templates"
 HTML_OUTPUT_FOLDER = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/generated/"
