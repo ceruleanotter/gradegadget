@@ -44,17 +44,22 @@ class Student(object):
             self.letter = self.getLetter()
             
         def getLetter(self):
-            if self.etm >= 90 :
-                return "A"
-            elif self.etm >= 80 :
-                return "B"
-            elif self.etm >= 70 :
-                return "C"
-            elif self.etm >= 60 :
-                return "D"
-            else:
-                return "F"
+            try:
+                if float(self.etm) >= 90 :
+                    return "A"
+                elif float(self.etm) >= 80 :
+                    return "B"
+                elif float(self.etm) >= 70 :
+                    return "C"
+                elif float(self.etm) >= 60 :
+                    return "D"
+                elif float(self.etm) >= 50 :
+                    return "E"
+                else:
+                    return "F"
+            except ValueError:
+                return "MISSING"
             
                 
         def __str__(self):
-            return self.subject + ": " + str(self.mtm) + "|" + str(self.final) + "|" + str(self.etm) + "|" + str(self.average)
+            return self.subject + ": MTM " + str(self.mtm) + "| TEM " + str(self.final) + "| ETM " + str(self.etm) + "|" + str(self.average)

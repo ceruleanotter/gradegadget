@@ -102,3 +102,42 @@ def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic)
         cursum = cursum + float(curgrade)
         curNumCounted += 1
     return classes
+
+
+
+def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, flag_missing=True):
+    #get a unique list of all the courses, with the first place sighted
+    courses = {}
+    for row in range(1,termgradesheet.nrows):
+        curcourseID = termgradesheet.cell(row,reportsheet_index_dic["Section ID"]).value.strip()
+        curcourseID = curcourseID[0:4]
+        if not(courses.has_key(curcourseID)):
+            courses[curcourseID] = row
+    
+    #for each course, find the average
+    for course in courses.keys():
+        startRow = courses[course]
+        sum = 0
+        count = 0
+        missingGrade = False
+        for row in range(startRow,termgradesheet.nrows):
+            curcourseID = termgradesheet.cell(row,reportsheet_index_dic["Section ID"]).value.strip()
+            curcourseID = curcourseID[0:4]
+            if course == curcourseID:
+                curgrade = termgradesheet.cell(row,reportsheet_index_dic[ETM]).value
+                if curgrade is empty_cell.value:
+                    missingGrade = True
+                    break
+            
+                sum+=float(curgrade)
+                count+=1
+        if flag_missing and missingGrade:
+            courses[course] = "MISSING"
+        else:
+            courses[course] = int(round((float(sum)/int(count))))
+ 
+    #match section with course average
+    for c in classes.keys():
+        classCourse = c[0:4]
+        classes[c].grade_average = courses[classCourse]
+    return classes
