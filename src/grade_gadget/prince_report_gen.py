@@ -8,18 +8,22 @@ from jinja2 import Environment, FileSystemLoader
 import datetime
 env = Environment(loader=FileSystemLoader(TEMPLATES_FOLDER))
 
-#for ordering purposes
+# for ordering purposes
+
 
 def generatePrinceReports(students):
     print ":)"
     
     #order the grades
-
     orderedStudents = sorted(students.values(),key=lambda student: student.lastName)
 
-    print orderedStudents
+    #print orderedStudents
       
+    
     outer = env.get_template("outer_template_sorted.xhtml")
+    if (REPORT_TYPE == ReportType.Midterm):
+        outer = env.get_template("outer_template_midterm.xhtml")
+    
     #inner = env.get_template("inner_template.xhtml")
     sheets_html = outer.render(students=orderedStudents,year=year,term=term)
     timenow = datetime.datetime.now()

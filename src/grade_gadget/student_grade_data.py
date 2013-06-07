@@ -3,7 +3,7 @@ Created on Aug 30, 2012
 
 @author: Lyla
 '''
-
+from course_section import Section
 class Student(object):
     '''
     classdocs
@@ -17,13 +17,39 @@ class Student(object):
         self.advisor = advisor
         self.username=username
         self.grades = []
+        self.gpa = -1
         print "Done creating " + self.firstName + " " + self.lastName
         
     def addGrade(self,subject, mtm, etm, final, comment):        
         self.grades.append(self.Grade(subject.name, mtm, etm, final, subject.grade_average,
-                                       subject.teacher, comment))
+                                       subject.teacher, comment, subject.course))
 
         
+    def calculateGPA(self):
+        print "caluclating GPA for " + self.firstName
+        sum = 0;
+        dividedBy =0;
+        if Section.MAJORCOURSES == -1:
+            raise Exception("MAJORCOURSES in course_section was not initalize, please do this before calculating GPAs")
+        for grade in self.grades:
+            try:
+                etm = float(grade.etm)
+            except ValueError:
+                print "No grade for " + grade.subject
+                continue
+            if (grade.course in Section.MAJORCOURSES):
+                sum += (2*etm)
+                dividedBy +=2
+            else:
+                sum += etm
+                dividedBy+=1
+        if dividedBy != 0:
+            self.gpa = round(sum/dividedBy,2)
+            
+            print str(self.gpa) + " = " + str(sum) + "/" + str(dividedBy)
+        else:
+            print "calculation failed"
+    
     
     def __str__(self):
         gradesoutput = ""
@@ -33,7 +59,7 @@ class Student(object):
         return self.firstName + " " + self.lastName + ", Combo: " + self.combo + " Grades: " + gradesoutput
     
     class Grade(object):
-        def __init__(self, subject, mtm, etm,final,ave,teacher,comment):
+        def __init__(self, subject, mtm, etm,final,ave,teacher,comment,course):
             self.subject = subject
             self.mtm = mtm
             self.etm = etm
@@ -42,7 +68,7 @@ class Student(object):
             self.comment = comment
             self.teacher = teacher
             self.letter = self.getLetter()
-            
+            self.course = course
         def getLetter(self):
             try:
                 if float(self.etm) >= 90 :
@@ -62,4 +88,4 @@ class Student(object):
             
                 
         def __str__(self):
-            return self.subject + ": MTM " + str(self.mtm) + "| TEM " + str(self.final) + "| ETM " + str(self.etm) + "|" + str(self.average)
+            return self.section + ": MTM " + str(self.mtm) + "| TEM " + str(self.final) + "| ETM " + str(self.etm) + "|" + str(self.average)

@@ -5,8 +5,8 @@ Created on Aug 31, 2012
 '''
 
 from xlrd import empty_cell
-from course_section import Section
 from user_inputs import *
+from course_section import Section
 
 def getGroupMembers(groupName, groupSheet):
     """Given a valid group sheet, returns a list of the members"""
@@ -17,7 +17,7 @@ def getGroupMembers(groupName, groupSheet):
         if groupSheet.cell(row,1).value==groupName and groupSheet.cell(row+2,1).value==str(year):
             groupRow = row
             break
-    print groupRow
+    #print groupRow
     groupRow +=6 #this is how many farther down the actual list starts
     
     names = []
@@ -34,7 +34,7 @@ def makeIndexDict(sheet, columnNamesDic):
         cell = sheet.cell(0,col).value
         if cell in columnNamesDic:
             columnNamesDic[cell] = col
-    print columnNamesDic
+    #print columnNamesDic
     return columnNamesDic
 
 
@@ -52,27 +52,38 @@ def getMapOfTeacherUsernameToGradeName(groupssheet,peoplesheet,student_index_dic
         else:
             name = "Mr."+peoplesheet.cell(row,student_index_dic["First Name"]).value
         teachers[curuser] = name
-    print teachers
+    #print teachers
     return teachers
 
-def makeClassesDic(sectionSheet,teachers):
+def makeClassesDic(sectionSheet,teachers, sections_index_dic, year, term):
     classes = {}
-    for row in range(0, sectionSheet.nrows):
-        if sectionSheet.cell(row,0).value == "Section Title":
-            sectionName = sectionSheet.cell(row,1).value
-            sectionID = sectionSheet.cell(row+1,1).value
-            row += 1
-            instructor ="None"
-            #rapidly go through the rows to find the instructors or stop at the next section title
-            while True :
-                if sectionSheet.cell(row,0).value == "Section Title":
-                    break
-                if sectionSheet.cell(row,0).value == "Instructors":
-                    instructor = teachers[sectionSheet.cell(row+1,0).value]
-                    break
-                row+=1
-            classes[sectionID] = Section(sectionID, sectionName, instructor)
-            print classes[sectionID]
+    for row in range(1, sectionSheet.nrows):
+        
+        #need to check if the section is the correct year and everything
+        if (sectionSheet.cell(row,sections_index_dic["Term"]).value == ("term-" + str(term)) and 
+            sectionSheet.cell(row,sections_index_dic["School Year"]).value == str(year)):
+            sectionName = sectionSheet.cell(row,sections_index_dic["Title"]).value
+            sectionID = sectionSheet.cell(row,sections_index_dic["Section ID"]).value
+            instructor = teachers[sectionSheet.cell(row,sections_index_dic["Instructors"]).value.split(",")[0]]
+            course = sectionSheet.cell(row,sections_index_dic["Courses"]).value
+        #goes to every section, get the name, id, instructors, title
+        #need to be changed
+        
+#        if sectionSheet.cell(row,0).value == "Section Title":
+#            sectionName = sectionSheet.cell(row,1).value
+#            sectionID = sectionSheet.cell(row+1,1).value
+#            row += 1
+#            instructor ="None"
+#            #rapidly go through the rows to find the instructors or stop at the next section title
+#            while True :
+#                if sectionSheet.cell(row,0).value == "Section Title":
+#                    break
+#                if sectionSheet.cell(row,0).value == "Instructors":
+#                    instructor = teachers[sectionSheet.cell(row+1,0).value]
+#                    break
+#                row+=1
+            classes[sectionID] = Section(sectionID, sectionName, instructor, course)
+            #print classes[sectionID]
     return classes
 
 def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic):
@@ -113,7 +124,7 @@ def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, 
         curcourseID = curcourseID[0:4]
         if not(courses.has_key(curcourseID)):
             courses[curcourseID] = row
-    
+    # print courses
     #for each course, find the average
     for course in courses.keys():
         startRow = courses[course]
@@ -140,4 +151,11 @@ def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, 
     for c in classes.keys():
         classCourse = c[0:4]
         classes[c].grade_average = courses[classCourse]
+        print classes[c]
     return classes
+
+            
+     
+def calculateGPAs(students):
+    for s in students:
+        students[s].calculateGPA()
