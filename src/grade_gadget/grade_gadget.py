@@ -4,6 +4,8 @@ Created on Aug 30, 2012
 
 meant to create gradesheets from the outputted xls files of schooltool
 '''
+
+
 from mmap import mmap,ACCESS_READ
 from xlrd import open_workbook,empty_cell
 import os.path
@@ -35,7 +37,7 @@ usernamesForSheets = grade_gadget_methods.getGroupMembers(group, groupssheet)
 #make a dictionary that matches the appropriate column types to their indexes in the sheet
 student_index_dic = grade_gadget_methods.makeIndexDict(peoplesheet, {"User Name":-1,"First Name":-1,"Last Name":-1,COMBO:-1, "Gender":-1,ADVISOR:-1})
 reportsheet_index_dic = grade_gadget_methods.makeIndexDict(termgradesheet,
-                                                           {"Section ID":-1,"Student ID":-1,ETM:-1,FINAL:-1,COMMENT:-1,MTM:-1})
+                                                        {"Section ID":-1,"Student ID":-1,ETM:-1,FINAL:-1,COMMENT:-1,MTM:-1})
 sections_index_dic = grade_gadget_methods.makeIndexDict(sectionsheet,
                                                         {"School Year":-1,"Term":-1,"Title":-1,"Section ID":-1,"Instructors":-1,"Courses":-1})
 courses_index_dic = grade_gadget_methods.makeIndexDict(coursesheet,
@@ -64,7 +66,8 @@ teachers = grade_gadget_methods.getMapOfTeacherUsernameToGradeName(groupssheet, 
 #maps the class id to a instance of section with all the correct info
 
 classes = grade_gadget_methods.makeClassesDic(sectionsheet, teachers, sections_index_dic, year, term)
-classes = grade_gadget_methods.calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, True)
+classes = grade_gadget_methods.calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, False)
+#classes = grade_gadget_methods.calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic)
 
 
 print reportsheet_index_dic
@@ -114,8 +117,12 @@ for row in range(1,termgradesheet.nrows):
 
 #now, caluclate GPAs
 grade_gadget_methods.calculateGPAs(students)
-#now we need to generate the file for the sheets
-prince_report_gen.generatePrinceReports(students)
+
+if(REPORT_TYPE == ReportType.Excel) :
+    grade_gadget_methods.createExcel(students)
+    #now we need to generate the file for the sheets
+else:
+    prince_report_gen.generatePrinceReports(students)
 
 
 

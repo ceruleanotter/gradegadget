@@ -88,4 +88,4 @@ class Student(object):
             
                 
         def __str__(self):
-            return self.section + ": MTM " + str(self.mtm) + "| TEM " + str(self.final) + "| ETM " + str(self.etm) + "|" + str(self.average)
+            return self.course + ": MTM " + str(self.mtm) + "| TEM " + str(self.final) + "| ETM " + str(self.etm) + "|" + str(self.average)

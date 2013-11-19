@@ -18,6 +18,7 @@ def generatePrinceReports(students):
     orderedStudents = sorted(students.values(),key=lambda student: student.lastName)
 
     #print orderedStudents
+
       
     
     outer = env.get_template("outer_template_sorted.xhtml")

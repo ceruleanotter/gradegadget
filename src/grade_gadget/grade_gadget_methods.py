@@ -7,6 +7,8 @@ Created on Aug 31, 2012
 from xlrd import empty_cell
 from user_inputs import *
 from course_section import Section
+import csv
+import datetime
 
 def getGroupMembers(groupName, groupSheet):
     """Given a valid group sheet, returns a list of the members"""
@@ -145,7 +147,10 @@ def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, 
         if flag_missing and missingGrade:
             courses[course] = "MISSING"
         else:
-            courses[course] = int(round((float(sum)/int(count))))
+            if int(count) == 0:
+                courses[course] = "MISSING"                
+            else:
+                courses[course] = int(round((float(sum)/int(count))))
  
     #match section with course average
     for c in classes.keys():
@@ -159,3 +164,21 @@ def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, 
 def calculateGPAs(students):
     for s in students:
         students[s].calculateGPA()
+        
+def createExcel(students):
+    print students
+    student_gpas = [];
+    student_gpas.append(("First Name", "Last Name", "GPA for " + str(term) + " " + str(year)))
+    for s in students:
+        student = students[s]
+        student_gpas.append([student.firstName,student.lastName,student.gpa])
+    timenow = datetime.datetime.now()
+    dayforfile = str(timenow.day) + "-" + str(timenow.month) + "-" + str(timenow.year) + "at" + str(timenow.hour) + "-" + str(timenow.minute) 
+    with open(HTML_OUTPUT_FOLDER+'gpas_for_'+str(group)+'_term_'+str(term)+'_'+str(year)+'generated_'+dayforfile+'.csv','w') as gpa_csv:
+        writer = csv.writer(gpa_csv)
+        writer.writerows(student_gpas)
+            
+
+            
+            
+        
