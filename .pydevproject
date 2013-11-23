@@ -7,4 +7,7 @@
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/GradeGadget/src</path>
 </pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>C:\Python27\Lib\site-packages\wx-2.8-msw-unicode\wx</path>
+</pydev_pathproperty>
 </pydev_project>
