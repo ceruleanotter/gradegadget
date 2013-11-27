@@ -5,18 +5,18 @@ Created on Aug 31, 2012
 '''
 
 from xlrd import empty_cell
-from user_inputs import *
+from user_inputs import UserInput
 from course_section import Section
 import csv
 import datetime
 
-def getGroupMembers(groupName, groupSheet):
+def getGroupMembers(groupName, groupSheet, ui):
     """Given a valid group sheet, returns a list of the members"""
     #got to find which row the group states
     groupRow = -1
 
     for row in range(groupSheet.nrows):
-        if groupSheet.cell(row,1).value==groupName and groupSheet.cell(row+2,1).value==str(year):
+        if groupSheet.cell(row,1).value==groupName and groupSheet.cell(row+2,1).value==str(ui.year):
             groupRow = row
             break
     #print groupRow
@@ -40,9 +40,9 @@ def makeIndexDict(sheet, columnNamesDic):
     return columnNamesDic
 
 
-def getMapOfTeacherUsernameToGradeName(groupssheet,peoplesheet,student_index_dic):
+def getMapOfTeacherUsernameToGradeName(groupssheet,peoplesheet,student_index_dic, ui):
     #get the teacher's usernames
-    usernamesForTeachers = getGroupMembers(TEACHERS, groupssheet)
+    usernamesForTeachers = getGroupMembers(ui.TEACHERS, groupssheet, ui)
     teachers = {}
     for row in range (1,peoplesheet.nrows):
         curuser = peoplesheet.cell(row,student_index_dic["User Name"]).value
@@ -57,13 +57,13 @@ def getMapOfTeacherUsernameToGradeName(groupssheet,peoplesheet,student_index_dic
     #print teachers
     return teachers
 
-def makeClassesDic(sectionSheet,teachers, sections_index_dic, year, term):
+def makeClassesDic(sectionSheet,teachers, sections_index_dic, ui):
     classes = {}
     for row in range(1, sectionSheet.nrows):
         
         #need to check if the section is the correct year and everything
-        if (sectionSheet.cell(row,sections_index_dic["Term"]).value == ("term-" + str(term)) and 
-            sectionSheet.cell(row,sections_index_dic["School Year"]).value == str(year)):
+        if (sectionSheet.cell(row,sections_index_dic["Term"]).value == (str(ui.term)) and 
+            sectionSheet.cell(row,sections_index_dic["School Year"]).value == str(ui.year)):
             sectionName = sectionSheet.cell(row,sections_index_dic["Title"]).value
             sectionID = sectionSheet.cell(row,sections_index_dic["Section ID"]).value
             instructor = teachers[sectionSheet.cell(row,sections_index_dic["Instructors"]).value.split(",")[0]]
@@ -88,9 +88,9 @@ def makeClassesDic(sectionSheet,teachers, sections_index_dic, year, term):
             #print classes[sectionID]
     return classes
 
-def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic):
+def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic, ui):
     prevclassID = termgradesheet.cell(1,reportsheet_index_dic["Section ID"]).value
-    cursum= int(termgradesheet.cell(1,reportsheet_index_dic[ETM]).value)
+    cursum= int(termgradesheet.cell(1,reportsheet_index_dic[ui.ETM]).value)
     curNumCounted = 1
     curMissingGrade = False
     for row in range(2,termgradesheet.nrows):
@@ -107,7 +107,7 @@ def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic)
             prevclassID = curclassID
             continue
         #print termgradesheet.cell(row,reportsheet_index_dic["Final Grades Term 2 / End of Term Mark"]).value
-        curgrade = termgradesheet.cell(row,reportsheet_index_dic[ETM]).value
+        curgrade = termgradesheet.cell(row,reportsheet_index_dic[ui.ETM]).value
         prevclassID = curclassID
         if curgrade is empty_cell.value:
             curMissingGrade = True
@@ -118,8 +118,14 @@ def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic)
 
 
 
-def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, flag_missing=True):
+def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, ui,flag_missing=True):
     #get a unique list of all the courses, with the first place sighted
+    print "classes is " + str(classes)
+    print "termgradesheet is " + str(termgradesheet)
+    print "reportsheet_index_dic " + str(reportsheet_index_dic)
+    print "ui is " + str(ui)
+    print "flag_missing is " + str(flag_missing)
+    
     courses = {}
     for row in range(1,termgradesheet.nrows):
         curcourseID = termgradesheet.cell(row,reportsheet_index_dic["Section ID"]).value.strip()
@@ -137,7 +143,7 @@ def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, 
             curcourseID = termgradesheet.cell(row,reportsheet_index_dic["Section ID"]).value.strip()
             curcourseID = curcourseID[0:4]
             if course == curcourseID:
-                curgrade = termgradesheet.cell(row,reportsheet_index_dic[ETM]).value
+                curgrade = termgradesheet.cell(row,reportsheet_index_dic[ui.ETM]).value
                 if curgrade is empty_cell.value:
                     missingGrade = True
                     break
@@ -165,16 +171,16 @@ def calculateGPAs(students):
     for s in students:
         students[s].calculateGPA()
         
-def createExcel(students):
+def createExcel(students, ui):
     print students
     student_gpas = [];
-    student_gpas.append(("First Name", "Last Name", "GPA for " + str(term) + " " + str(year)))
+    student_gpas.append(("First Name", "Last Name", "GPA for " + str(ui.term) + " " + str(ui.year)))
     for s in students:
         student = students[s]
         student_gpas.append([student.firstName,student.lastName,student.gpa])
     timenow = datetime.datetime.now()
     dayforfile = str(timenow.day) + "-" + str(timenow.month) + "-" + str(timenow.year) + "at" + str(timenow.hour) + "-" + str(timenow.minute) 
-    with open(HTML_OUTPUT_FOLDER+'gpas_for_'+str(group)+'_term_'+str(term)+'_'+str(year)+'generated_'+dayforfile+'.csv','w') as gpa_csv:
+    with open(ui.HTML_OUTPUT_FOLDER+'gpas_for_'+str(ui.group)+"_"+str(ui.term)+'_'+str(ui.year)+'generated_'+dayforfile+'.csv','w') as gpa_csv:
         writer = csv.writer(gpa_csv)
         writer.writerows(student_gpas)
             

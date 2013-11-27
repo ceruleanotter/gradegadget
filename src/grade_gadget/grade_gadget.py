@@ -13,18 +13,22 @@ import grade_gadget_methods
 import prince_report_gen
 from student_grade_data import Student
 from course_section import Section
-
-from user_inputs import *
+from user_inputs import ReportType, UserInput, AverageType
+#from user_inputs import *
 #this stuff should be collected, maybe as part of the gui
 
-def generate_report() :
-    grades_excel_file = excel_file_location + "report_sheets_"+str(year)+"_term-"+str(term)+".xls"
-    school_excel_file = excel_file_location + "export.xls"
+def generate_report(userInput) :
+    school_excel_file = userInput.excel_file_location
+    grade_location = userInput.excel_file_location.replace("export.xls" , "")
+    print userInput.excel_file_location
+    print grade_location
+    grades_excel_file = grade_location + "report_sheets_"+str(userInput.year)+"_"+str(userInput.term)+".xls"
+    
     grades_workbook = open_workbook(grades_excel_file)
     school_workbook = open_workbook(school_excel_file)
     
     #getting all the sheets
-    termgradesheet = grades_workbook.sheet_by_name("term-"+str(term))
+    termgradesheet = grades_workbook.sheet_by_name(str(userInput.term))
     groupssheet = school_workbook.sheet_by_name("Groups")
     peoplesheet = school_workbook.sheet_by_name("Persons")
     coursesheet = school_workbook.sheet_by_name("Courses")
@@ -33,19 +37,19 @@ def generate_report() :
     enrollmentsheet = school_workbook.sheet_by_name("SectionEnrollment")
     
     #get all of the students usernames
-    usernamesForSheets = grade_gadget_methods.getGroupMembers(group, groupssheet)
+    usernamesForSheets = grade_gadget_methods.getGroupMembers(userInput.group, groupssheet, userInput)
     
     #make a dictionary that matches the appropriate column types to their indexes in the sheet
-    student_index_dic = grade_gadget_methods.makeIndexDict(peoplesheet, {"User Name":-1,"First Name":-1,"Last Name":-1,COMBO:-1, "Gender":-1,ADVISOR:-1})
+    student_index_dic = grade_gadget_methods.makeIndexDict(peoplesheet, {"User Name":-1,"First Name":-1,"Last Name":-1,userInput.COMBO:-1, "Gender":-1,userInput.ADVISOR:-1})
     reportsheet_index_dic = grade_gadget_methods.makeIndexDict(termgradesheet,
-                                                            {"Section ID":-1,"Student ID":-1,ETM:-1,FINAL:-1,COMMENT:-1,MTM:-1})
+                                                            {"Section ID":-1,"Student ID":-1,userInput.ETM:-1,userInput.FINAL:-1,userInput.COMMENT:-1,userInput.MTM:-1})
     sections_index_dic = grade_gadget_methods.makeIndexDict(sectionsheet,
                                                             {"School Year":-1,"Term":-1,"Title":-1,"Section ID":-1,"Instructors":-1,"Courses":-1})
     courses_index_dic = grade_gadget_methods.makeIndexDict(coursesheet,
                                                             {"School Year":-1,"ID":-1})
     
     #initalize course_section
-    Section.initalize(coursesheet,courses_index_dic,year)
+    Section.initalize(coursesheet,courses_index_dic,userInput)
     
     
     #make some students
@@ -58,17 +62,19 @@ def generate_report() :
         students[curuser] = Student(peoplesheet.cell(row,student_index_dic["First Name"]).value,
                                  peoplesheet.cell(row,student_index_dic["Last Name"]).value,
                                  curuser,
-                                 peoplesheet.cell(row,student_index_dic[COMBO]).value,
-                                 peoplesheet.cell(row,student_index_dic[ADVISOR]).value)
+                                 peoplesheet.cell(row,student_index_dic[userInput.COMBO]).value,
+                                 peoplesheet.cell(row,student_index_dic[userInput.ADVISOR]).value)
         
     #this gets a dictionary that maps the teacher's username to the name on the report card
-    teachers = grade_gadget_methods.getMapOfTeacherUsernameToGradeName(groupssheet, peoplesheet, student_index_dic)
+    teachers = grade_gadget_methods.getMapOfTeacherUsernameToGradeName(groupssheet, peoplesheet, student_index_dic, userInput)
     
     #maps the class id to a instance of section with all the correct info
-    
-    classes = grade_gadget_methods.makeClassesDic(sectionsheet, teachers, sections_index_dic, year, term)
-    classes = grade_gadget_methods.calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, False)
-    #classes = grade_gadget_methods.calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic)
+
+    classes = grade_gadget_methods.makeClassesDic(sectionsheet, teachers, sections_index_dic, userInput)
+    if userInput.aveType == AverageType.Course:
+        classes = grade_gadget_methods.calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic,userInput, False)
+    else:
+        classes = grade_gadget_methods.calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic, userInput)
     
     
     print reportsheet_index_dic
@@ -84,9 +90,9 @@ def generate_report() :
         studentun = termgradesheet.cell(row,reportsheet_index_dic["Student ID"]).value
         
         
-        final = termgradesheet.cell(row,reportsheet_index_dic[FINAL]).value
-        etm = termgradesheet.cell(row,reportsheet_index_dic[ETM]).value
-        mtm = termgradesheet.cell(row,reportsheet_index_dic[MTM]).value
+        final = termgradesheet.cell(row,reportsheet_index_dic[userInput.FINAL]).value
+        etm = termgradesheet.cell(row,reportsheet_index_dic[userInput.ETM]).value
+        mtm = termgradesheet.cell(row,reportsheet_index_dic[userInput.MTM]).value
         
         try:
             final = int(round(float(final)))
@@ -104,8 +110,8 @@ def generate_report() :
             mtm = "N/A"        
         
         comment = False
-        if (reportsheet_index_dic[COMMENT] != -1):
-            comment = termgradesheet.cell(row,reportsheet_index_dic[COMMENT]).value #trying this for comment
+        if (reportsheet_index_dic[userInput.COMMENT] != -1):
+            comment = termgradesheet.cell(row,reportsheet_index_dic[userInput.COMMENT]).value #trying this for comment
         
         
         try:
@@ -119,11 +125,11 @@ def generate_report() :
     #now, caluclate GPAs
     grade_gadget_methods.calculateGPAs(students)
     
-    if(REPORT_TYPE == ReportType.Excel) :
-        grade_gadget_methods.createExcel(students)
+    if(userInput.REPORT_TYPE == ReportType.Excel) :
+        grade_gadget_methods.createExcel(students, userInput)
         #now we need to generate the file for the sheets
     else:
-        prince_report_gen.generatePrinceReports(students)
+        prince_report_gen.generatePrinceReports(students, userInput)
     
     
     

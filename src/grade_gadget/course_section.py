@@ -15,10 +15,10 @@ class Section(object):
     MAJORSUBS = ["BI","CH","CS","MA","EC","GE","MA","PY","EN"]
     MAJORCOURSES = -1
     @classmethod
-    def initalize(cls, coursesheet, courses_index_dic, year):
+    def initalize(cls, coursesheet, courses_index_dic, ui):
         majorcourses = []
         for row in range(1,coursesheet.nrows):
-            if (coursesheet.cell(row,courses_index_dic["School Year"]).value!=str(year)):
+            if (coursesheet.cell(row,courses_index_dic["School Year"]).value!=str(ui.year)):
                 continue
             id = coursesheet.cell(row,courses_index_dic["ID"]).value
             if (id[0:2] in Section.MAJORSUBS and id != "CS41"):
