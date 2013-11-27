@@ -49,3 +49,17 @@ class UserInput(object):
         self.COMMENT = "End of Term Marks for "+str(tt)+" "+str(year)+" / Student Comment"
         self.TEMPLATES_FOLDER = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/templates"
  
+    def setETM(self, etm):
+        self.ETM = etm
+        
+    def setFINAL(self, final):
+        self.FINAL = final
+        
+    def setMTM(self, mtm):
+        self.MTM = mtm
+            
+    def setCOMMENT(self, comment):
+        self.COMMENT = comment
+            
+    def setTEMPLATES_FOLDER(self, temp):
+        self.TEMPLATES_FOLDER = temp

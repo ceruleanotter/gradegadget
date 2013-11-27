@@ -180,6 +180,7 @@ def createExcel(students, ui):
         student_gpas.append([student.firstName,student.lastName,student.gpa])
     timenow = datetime.datetime.now()
     dayforfile = str(timenow.day) + "-" + str(timenow.month) + "-" + str(timenow.year) + "at" + str(timenow.hour) + "-" + str(timenow.minute) 
+    
     with open(ui.HTML_OUTPUT_FOLDER+'gpas_for_'+str(ui.group)+"_"+str(ui.term)+'_'+str(ui.year)+'generated_'+dayforfile+'.csv','w') as gpa_csv:
         writer = csv.writer(gpa_csv)
         writer.writerows(student_gpas)
