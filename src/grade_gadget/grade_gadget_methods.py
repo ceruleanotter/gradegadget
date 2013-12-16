@@ -120,11 +120,11 @@ def calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic,
 
 def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, ui,flag_missing=True):
     #get a unique list of all the courses, with the first place sighted
-    print "classes is " + str(classes)
-    print "termgradesheet is " + str(termgradesheet)
-    print "reportsheet_index_dic " + str(reportsheet_index_dic)
-    print "ui is " + str(ui)
-    print "flag_missing is " + str(flag_missing)
+    #print "classes is " + str(classes)
+    #print "termgradesheet is " + str(termgradesheet)
+    #print "reportsheet_index_dic " + str(reportsheet_index_dic)
+    #print "ui is " + str(ui)
+    #print "flag_missing is " + str(flag_missing)
     
     courses = {}
     for row in range(1,termgradesheet.nrows):
@@ -162,7 +162,7 @@ def calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic, 
     for c in classes.keys():
         classCourse = c[0:4]
         classes[c].grade_average = courses[classCourse]
-        print classes[c]
+        #print classes[c]
     return classes
 
             
@@ -172,7 +172,7 @@ def calculateGPAs(students):
         students[s].calculateGPA()
         
 def createExcel(students, ui):
-    print students
+    #print students
     student_gpas = [];
     student_gpas.append(("First Name", "Last Name", "GPA for " + str(ui.term) + " " + str(ui.year)))
     for s in students:
@@ -180,11 +180,11 @@ def createExcel(students, ui):
         student_gpas.append([student.firstName,student.lastName,student.gpa])
     timenow = datetime.datetime.now()
     dayforfile = str(timenow.day) + "-" + str(timenow.month) + "-" + str(timenow.year) + "at" + str(timenow.hour) + "-" + str(timenow.minute) 
-    
-    with open(ui.HTML_OUTPUT_FOLDER+'gpas_for_'+str(ui.group)+"_"+str(ui.term)+'_'+str(ui.year)+'generated_'+dayforfile+'.csv','w') as gpa_csv:
+    filetoprint = ui.HTML_OUTPUT_FOLDER+'gpas_for_'+str(ui.group)+"_"+str(ui.term)+'_'+str(ui.year)+'generated_'+dayforfile+'.csv'
+    with open(filetoprint,'w') as gpa_csv:
         writer = csv.writer(gpa_csv)
         writer.writerows(student_gpas)
-            
+    return filetoprint
 
             
             

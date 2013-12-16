@@ -12,12 +12,14 @@
 
 import wx
 import os
+from shutil import copy
 import datetime
 from xlrd import open_workbook, biffh
 from user_inputs import ReportType, AverageType
 from user_inputs import UserInput
 from grade_gadget import generate_report
 import pickle
+import shutil
 
 class TermTuple:
     def __init__(self, term, termTitle):
@@ -43,6 +45,8 @@ class GradeGadgetFrame(wx.Frame):
                              "move your files")
     FRAME_WIDTH = 600
     FRAME_HEIGHT = 500
+    CONFIG_FILE = os.getcwd()+"\currentConfig.pkl"
+    YES_COMMENT = "Yes"
     def __init__(self, *args, **kwargs):
         super(GradeGadgetFrame, self).__init__(*args, **kwargs) 
             
@@ -52,7 +56,7 @@ class GradeGadgetFrame(wx.Frame):
         
 
         
-        self.currentDirectory = os.getcwd()
+        self.programDirectory = os.getcwd()
         self.SetSize((GradeGadgetFrame.FRAME_WIDTH, GradeGadgetFrame.FRAME_HEIGHT))
         self.SetTitle('Gashora Grade Gadget -- Report Generator')
         self.parentNotebook = wx.Notebook(self, -1, size=(GradeGadgetFrame.FRAME_WIDTH,GradeGadgetFrame.FRAME_HEIGHT), style=
@@ -158,6 +162,15 @@ class GradeGadgetFrame(wx.Frame):
 #        
 #        row6.Add(sb_output,1, flag=wx.ALL|wx.EXPAND, border=5)
 #        
+
+        text_comment = wx.StaticText(mainpanel, label='Include Comments');
+        row6.Add(text_comment,flag=wx.ALL|wx.EXPAND, border=5)  
+        
+        self.radio_buttons_comment = []
+        self.radio_buttons_comment.append(wx.RadioButton(mainpanel, label=GradeGadgetFrame.YES_COMMENT, style=wx.RB_GROUP))
+        self.radio_buttons_comment.append(wx.RadioButton(mainpanel, label="No"))
+        for b in self.radio_buttons_comment:
+            row6.Add(b,flag=wx.ALL|wx.EXPAND, border=5)
         
         #line
         line = wx.StaticLine(mainpanel)
@@ -240,8 +253,15 @@ class GradeGadgetFrame(wx.Frame):
         
         advancedpanel.SetSizer(avbox)
         
+        a_button_browse_template_location.Bind(wx.EVT_BUTTON, self.onBrowseTemplate)
+
         
-        
+        try:
+            pkl_file = open(self.CONFIG_FILE, 'rb')
+            loadedui = pickle.load(pkl_file)
+            self.loadConfiguration(loadedui)
+        except IOError:
+            print "No file exsists"
         
         self.Centre()
         self.Show(True)
@@ -252,7 +272,7 @@ class GradeGadgetFrame(wx.Frame):
 
             dialog = wx.FileDialog(self,
                                    message="Choose an export.xls file",
-                                   defaultDir = self.currentDirectory,
+                                   defaultDir = self.programDirectory,
                                    defaultFile = "",
                                    wildcard = filters,
                                    style=wx.OPEN | wx.CHANGE_DIR
@@ -264,6 +284,21 @@ class GradeGadgetFrame(wx.Frame):
                 self.setTerms(path)
                 #
                 self.text_ctrl_export.SetLabel(path)
+                print path
+            dialog.Destroy()
+            
+    def onBrowseTemplate(self, event):
+
+            dialog = wx.DirDialog(self,
+                                   message="Choose a directory",
+                                   style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST| wx.DD_CHANGE_DIR,
+                                   defaultPath=self.programDirectory
+                                   )
+            
+            
+            if dialog.ShowModal() == wx.ID_OK:
+                path = dialog.GetPath()
+                self.a_text_control_template_location.SetLabel(path)
                 print path
             dialog.Destroy()
             
@@ -394,7 +429,12 @@ class GradeGadgetFrame(wx.Frame):
                     print "Average type is: "
                     print aveType
                     break;
-            
+                
+            #comment included
+            for b in self.radio_buttons_comment:
+                if b.GetValue() == True:
+                    includeComment = (b.GetLabel() == GradeGadgetFrame.YES_COMMENT)
+                    break;
             
 #            #htmlOutputDir
 #            htmlOutputDir = self.text_ctrl_output.GetValue()
@@ -407,8 +447,11 @@ class GradeGadgetFrame(wx.Frame):
             print htmlOutputDir
             if not os.access(htmlOutputDir, os.F_OK):
                 os.mkdir(htmlOutputDir)
+                #move the picture over
+                
             else:
                 print "the generated directory already exsists"
+
             
             noerror = self.errorCheckAdvancedStuff(grades_location, term)
             
@@ -434,13 +477,25 @@ class GradeGadgetFrame(wx.Frame):
                             group = group,
                             repType = repType,
                             aveType = aveType,
-                            htmlOutputDir = htmlOutputDir)
+                            htmlOutputDir = htmlOutputDir,
+                            includeComments = includeComment)
             #deal with advanced stuff
             self.setAdvancedStuff(uIs)
             print "MADE UI"
             
+            #need to do this now, after the uI's is made and corrected; this is where we move the picture for the templates folder
+            try:
+                shutil.copy(uIs.TEMPLATES_FOLDER+"/rwanda_girls_resize_sun_only.jpg", uIs.HTML_OUTPUT_FOLDER+"rwanda_girls_resize_sun_only.jpg")
+                shutil.copy(uIs.TEMPLATES_FOLDER+"/rgi_large_faded.jpg", uIs.HTML_OUTPUT_FOLDER+"rgi_large_faded.jpg")            
+            except IOError:
+                print "couldn't copy RGI logo"
+            #overwrite and pickle it
+            self.storeNewConfiguration(uIs)
+            #when the UI is stored
+            print "When the UI is stored it is " + uIs.TEMPLATES_FOLDER
+            filegenerated = generate_report(uIs)
+            self.error_text.SetLabel("Generated file in:\n" + filegenerated )
             
-            #generate_report(uIs)
         
     def setErrorStylings(self,problemChildren):
         errorstring = "Could not generate because of the following errors:\n"
@@ -539,9 +594,41 @@ class GradeGadgetFrame(wx.Frame):
         if (self.a_text_control_comment.GetValue().strip() != ""):
             ui.setCOMMENT(self.a_text_control_comment.GetValue())
         if (self.a_text_control_template_location.GetValue().strip() != ""):
+            #print "should have changed templates folder"
             ui.setTEMPLATES_FOLDER(self.a_text_control_template_location.GetValue())
         
-        
+    def storeNewConfiguration(self, ui):
+        outputfile = open(self.CONFIG_FILE,'wb')
+        pickle.dump(ui, outputfile)
+        outputfile.close()
+    def loadConfiguration(self, ui):
+        self.text_ctrl_export.SetValue(ui.excel_file_location)
+        self.setTerms(ui.excel_file_location)
+        self.setGroups(ui.excel_file_location)
+        self.combo_term.SetValue(ui.termTitle)
+        self.spin_year.SetValue(int(ui.year))
+        self.combo_group.SetValue(ui.group)
+        for b in self.radio_buttons_report:
+            if ReportType.reportTypesDic[b.GetLabel()] == ui.REPORT_TYPE :
+                b.SetValue(True)
+                break
+        for b in self.radio_buttons_average:
+            if AverageType.aveTypesDic[b.GetLabel()] == ui.aveType :
+                b.SetValue(True)
+                break
+        #make a generic ui to compare the loaded config with
+        uicopy = ui.copy()
+        if uicopy.ETM != ui.ETM:
+            self.a_text_control_etm.SetValue(ui.ETM)
+        if uicopy.MTM != ui.MTM:
+            self.a_text_control_mtm.SetValue(ui.MTM)
+        if uicopy.FINAL != ui.FINAL:
+            self.a_text_control_final.SetValue(ui.FINAL) 
+        if uicopy.COMMENT != ui.COMMENT:
+            self.a_text_control_comment.SetValue(ui.COMMENT)
+        if uicopy.TEMPLATES_FOLDER != ui.TEMPLATES_FOLDER:
+            self.a_text_control_template_location.SetValue(ui.TEMPLATES_FOLDER)               
+
 app = wx.App(0) # 0 makes it go to standard output instead of the gui window
 GradeGadgetFrame(None)
 app.MainLoop()

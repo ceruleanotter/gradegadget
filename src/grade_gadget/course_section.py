@@ -23,8 +23,8 @@ class Section(object):
             id = coursesheet.cell(row,courses_index_dic["ID"]).value
             if (id[0:2] in Section.MAJORSUBS and id != "CS41"):
                 majorcourses.append(id)
-        print "Major Courses: " 
-        print majorcourses
+        #print "Major Courses: " 
+        #print majorcourses
         Section.MAJORCOURSES = majorcourses
         
     

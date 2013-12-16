@@ -340,7 +340,7 @@ tr#grades table tr td.grades_header_comment {
 		<tr id="logos">
 			<img id="logo" src="rwanda_girls_resize_sun_only.jpg"/>
 			<span class="title">Gashora Girls Academy of Science and Technology</span>
-			End of Term {{ term }} Report, {{ year }}
+			End of {{ term }} Report, {{ year }}
 			<br/>
 			
 		</tr> <!--end of logo -->
@@ -377,7 +377,7 @@ tr#grades table tr td.grades_header_comment {
 							<td class="grades_header_etm">{{ grade.etm }}</td>
 							<td class="grades_header_classav">{{ grade.average }}</td>
 							<td class="grades_header_letter">{{ grade.letter }}</td>
-							<td class="grades_header_comment">{{ grade.comment }}</td>
+							<td class="grades_header_comment">{% if grade.comment %}{{ grade.comment }}{% endif %}</td>
 							<td class="grades_header_teacher">{{ grade.teacher }}</td>
 					</tr> <!--end of grades_box {{ loop.index }} -->
 				{% endfor %}

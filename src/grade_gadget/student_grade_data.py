@@ -18,7 +18,7 @@ class Student(object):
         self.username=username
         self.grades = []
         self.gpa = -1
-        print "Done creating " + self.firstName + " " + self.lastName
+        #print "Done creating " + self.firstName + " " + self.lastName
         
     def addGrade(self,subject, mtm, etm, final, comment):        
         self.grades.append(self.Grade(subject.name, mtm, etm, final, subject.grade_average,
@@ -26,7 +26,7 @@ class Student(object):
 
         
     def calculateGPA(self):
-        print "caluclating GPA for " + self.firstName
+        #print "caluclating GPA for " + self.firstName
         sum = 0;
         dividedBy =0;
         if Section.MAJORCOURSES == -1:
@@ -35,7 +35,7 @@ class Student(object):
             try:
                 etm = float(grade.etm)
             except ValueError:
-                print "No grade for " + grade.subject
+                #print "No grade for " + grade.subject
                 continue
             if (grade.course in Section.MAJORCOURSES):
                 sum += (2*etm)
@@ -46,7 +46,7 @@ class Student(object):
         if dividedBy != 0:
             self.gpa = round(sum/dividedBy,2)
             
-            print str(self.gpa) + " = " + str(sum) + "/" + str(dividedBy)
+            #print str(self.gpa) + " = " + str(sum) + "/" + str(dividedBy)
         else:
             print "calculation failed"
     

@@ -110,7 +110,7 @@ def generate_report(userInput) :
             mtm = "N/A"        
         
         comment = False
-        if (reportsheet_index_dic[userInput.COMMENT] != -1):
+        if (userInput.includeComments and reportsheet_index_dic[userInput.COMMENT] != -1):
             comment = termgradesheet.cell(row,reportsheet_index_dic[userInput.COMMENT]).value #trying this for comment
         
         
@@ -125,12 +125,13 @@ def generate_report(userInput) :
     #now, caluclate GPAs
     grade_gadget_methods.calculateGPAs(students)
     
+    filetoprint = "No File"
     if(userInput.REPORT_TYPE == ReportType.Excel) :
-        grade_gadget_methods.createExcel(students, userInput)
+        filetoprint = grade_gadget_methods.createExcel(students, userInput)
         #now we need to generate the file for the sheets
     else:
-        prince_report_gen.generatePrinceReports(students, userInput)
+        filetoprint =  prince_report_gen.generatePrinceReports(students, userInput)
     
-    
+    return filetoprint
     
     #and command line run it through prince
