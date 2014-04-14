@@ -1,3 +1,11 @@
 *.class
 *.pyc
 *.pyo
+templates_mini
+templates_old
+excel_sheets_from_lydia
+excel_sheets_from_schooltool
+pybuilder-0.3-binary
+templates_mini
+src/grade_gadget_mini
+src/html_basics
