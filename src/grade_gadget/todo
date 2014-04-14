@@ -1,4 +1,4 @@
-do some error checking that the file is actually OK
-some way to save settings (once this happens take away the automatic setting for the location)
-
-finish advanced stuff/tab
+/-automatic location for templates folder should be inside of the folder this is run from, or in relation to it
+-get rid of the spaces in the GPA sheet
+-see if there is a prince API to automatically generate
+-make the changes paulin wants

@@ -30,7 +30,9 @@ class UserInput(object):
                  repType=ReportType.Final,
                  aveType = AverageType.Course,
                  htmlOutputDir = "C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/generated/",
-                 includeComments = True):
+                 includeComments = True,
+                 programDir = "",
+                 flagMissing = True):
         self.excel_file_location = export_location
         self.year = year
         self.term = term
@@ -40,6 +42,7 @@ class UserInput(object):
         self.HTML_OUTPUT_FOLDER = htmlOutputDir
         self.aveType = aveType
         self.includeComments = includeComments
+        self.flagMissing = flagMissing
         
         
         self.TEACHERS = "Teachers"
@@ -49,8 +52,8 @@ class UserInput(object):
         self.FINAL = "End of Term Marks for "+str(tt)+" "+str(year)+" / Term Exam Mark"
         self.MTM = "Midterm Marks Term for "+str(tt)+" "+str(year)+" / Midterm Mark"
         self.COMMENT = "End of Term Marks for "+str(tt)+" "+str(year)+" / Student Comment"
-        self.TEMPLATES_FOLDER = os.path.dirname(self.excel_file_location) + "\\templates"
-        print "just create a UI with " + self.TEMPLATES_FOLDER
+        self.TEMPLATES_FOLDER = programDir + "\\templates"
+        print "The templates folder is " + self.TEMPLATES_FOLDER
  
     def setETM(self, etm):
         self.ETM = etm
@@ -67,7 +70,7 @@ class UserInput(object):
     def setTEMPLATES_FOLDER(self, temp):
         self.TEMPLATES_FOLDER = temp
     
-    def copy(self):
+    def copy(self, pd):
         
         newui = UserInput(export_location = self.excel_file_location,
                  year=self.year,
@@ -76,6 +79,7 @@ class UserInput(object):
                  group= self.group,
                  repType= self.REPORT_TYPE,
                  aveType = self.aveType,
-                 htmlOutputDir = self.HTML_OUTPUT_FOLDER)
+                 htmlOutputDir = self.HTML_OUTPUT_FOLDER,
+                 programDir = pd)
         return newui
         

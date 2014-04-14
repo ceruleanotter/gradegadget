@@ -1,0 +1,77 @@
+ccopy_reg
+_reconstructor
+p0
+(cuser_inputs
+UserInput
+p1
+c__builtin__
+object
+p2
+Ntp3
+Rp4
+(dp5
+S'COMMENT'
+p6
+S'End of Term Marks for Term 1 2014 / Student Comment'
+p7
+sS'HTML_OUTPUT_FOLDER'
+p8
+VC:\u005cUsers\u005cLyla\u005cDesktop\u005cSchoolToolExcelSheets\u005cPaulinErrorSheets\u005cGENERATED\u005c
+p9
+sS'term'
+p10
+Vterm-1
+p11
+sS'group'
+p12
+VStudents
+p13
+sS'termTitle'
+p14
+VTerm 1
+p15
+sS'MTM'
+p16
+S'Midterm Marks Term for Term 1 2014 / Midterm Mark'
+p17
+sS'TEMPLATES_FOLDER'
+p18
+S'C:\\Users\\Lyla\\Documents\\GGAST\\Technician\\grade_generator\\Python_Report_Generator\\src\\grade_gadget\\Gashora Grade Gadget\\templates'
+p19
+sS'COMBO'
+p20
+S'Combination'
+p21
+sS'includeComments'
+p22
+I01
+sS'FINAL'
+p23
+S'End of Term Marks for Term 1 2014 / Term Exam Mark'
+p24
+sS'ADVISOR'
+p25
+S'Advisor'
+p26
+sS'TEACHERS'
+p27
+S'Teachers'
+p28
+sS'REPORT_TYPE'
+p29
+I0
+sS'year'
+p30
+I2014
+sS'excel_file_location'
+p31
+VC:\u005cUsers\u005cLyla\u005cDesktop\u005cSchoolToolExcelSheets\u005cPaulinErrorSheets\u005cexport.xls
+p32
+sS'aveType'
+p33
+I0
+sS'ETM'
+p34
+VMidterm Marks / Midterm Mark
+p35
+sb.

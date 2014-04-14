@@ -38,8 +38,11 @@ S'1.0'
 p19
 sS'data'
 p20
-(tsS'icon'
+(S'templates=templates'
 p21
+tp22
+sS'icon'
+p23
 S'C:/Users/Lyla/Documents/GGAST/Technician/grade_generator/Python_Report_Generator/src/program_icon.ico'
-p22
+p24
 s.

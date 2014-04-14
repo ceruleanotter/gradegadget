@@ -12,15 +12,15 @@ Rp4
 (dp5
 S'COMMENT'
 p6
-S'End of Term Marks for Term 3 2013 / Student Comment'
+S'End of Term Marks for Term 1 2014 / Student Comment'
 p7
 sS'HTML_OUTPUT_FOLDER'
 p8
-VC:\u005cUsers\u005cLyla\u005cDocuments\u005cGGAST\u005cTechnician\u005cgrade_generator\u005cPython_Report_Generator\u005cexcel_sheets_from_schooltool\u005cGENERATED\u005c
+VC:\u005cUsers\u005cLyla\u005cDesktop\u005cSchoolToolExcelSheets\u005cPaulinErrorSheets\u005cGENERATED\u005c
 p9
 sS'term'
 p10
-Vterm-3
+Vterm-1
 p11
 sS'group'
 p12
@@ -28,15 +28,15 @@ VStudents
 p13
 sS'termTitle'
 p14
-VTerm 3
+VTerm 1
 p15
 sS'MTM'
 p16
-S'Midterm Marks Term for Term 3 2013 / Midterm Mark'
+VMidterm Marks / Midterm Mark
 p17
 sS'TEMPLATES_FOLDER'
 p18
-VC:\u005cUsers\u005cLyla\u005cDocuments\u005cGGAST\u005cTechnician\u005cgrade_generator\u005cPython_Report_Generator\u005ctemplates
+S'C:\\Users\\Lyla\\Documents\\GGAST\\Technician\\grade_generator\\Python_Report_Generator\\src\\grade_gadget\\templates'
 p19
 sS'COMBO'
 p20
@@ -44,10 +44,10 @@ S'Combination'
 p21
 sS'includeComments'
 p22
-I01
+I00
 sS'FINAL'
 p23
-S'End of Term Marks for Term 3 2013 / Term Exam Mark'
+S'End of Term Marks for Term 1 2014 / Term Exam Mark'
 p24
 sS'ADVISOR'
 p25
@@ -59,20 +59,22 @@ S'Teachers'
 p28
 sS'REPORT_TYPE'
 p29
-I1
+I0
 sS'year'
 p30
-S'2013'
+I2014
+sS'flagMissing'
 p31
+I00
 sS'excel_file_location'
 p32
-VC:\u005cUsers\u005cLyla\u005cDocuments\u005cGGAST\u005cTechnician\u005cgrade_generator\u005cPython_Report_Generator\u005cexcel_sheets_from_schooltool\u005cexport.xls
+VC:\u005cUsers\u005cLyla\u005cDesktop\u005cSchoolToolExcelSheets\u005cPaulinErrorSheets\u005cexport.xls
 p33
 sS'aveType'
 p34
 I0
 sS'ETM'
 p35
-S'End of Term Marks for Term 3 2013 / End of Term Mark'
+S'End of Term Marks for Term 1 2014 / End of Term Mark'
 p36
 sb.

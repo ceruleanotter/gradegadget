@@ -9,7 +9,6 @@ class Student(object):
     classdocs
     '''
 
-
     def __init__(self, firstName, lastName, username, combo="undecided", advisor="none"):
         self.firstName = firstName
         self.lastName = lastName
@@ -18,37 +17,38 @@ class Student(object):
         self.username=username
         self.grades = []
         self.gpa = -1
-        #print "Done creating " + self.firstName + " " + self.lastName
+        self.currentYear = ""
         
     def addGrade(self,subject, mtm, etm, final, comment):        
         self.grades.append(self.Grade(subject.name, mtm, etm, final, subject.grade_average,
                                        subject.teacher, comment, subject.course))
 
         
-    def calculateGPA(self):
-        #print "caluclating GPA for " + self.firstName
+    def calculateGPA(self, isFinal):
+
         sum = 0;
         dividedBy =0;
         if Section.MAJORCOURSES == -1:
             raise Exception("MAJORCOURSES in course_section was not initalize, please do this before calculating GPAs")
         for grade in self.grades:
             try:
-                etm = float(grade.etm)
+                if isFinal:
+                    numGrade = float(grade.etm)
+                else:
+                    numGrade = float(grade.mtm)
             except ValueError:
                 #print "No grade for " + grade.subject
                 continue
             if (grade.course in Section.MAJORCOURSES):
-                sum += (2*etm)
+                sum += (2*numGrade)
                 dividedBy +=2
             else:
-                sum += etm
+                sum += numGrade
                 dividedBy+=1
         if dividedBy != 0:
             self.gpa = round(sum/dividedBy,2)
-            
-            #print str(self.gpa) + " = " + str(sum) + "/" + str(dividedBy)
         else:
-            print "calculation failed"
+            print "gpa calculation failed for " + self.firstName + " " + self.lastName
     
     
     def __str__(self):

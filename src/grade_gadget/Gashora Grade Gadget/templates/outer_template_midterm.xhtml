@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC
+  "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
+  "http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:html="http://www.w3.org/1999/xhtml">
+<head>
+<style type="text/css">
+@import url(http://www.princexml.com/fonts/larabie/index.css) all;
+@import url(http://www.princexml.com/fonts/steffmann/index.css) all;
+@import url(http://www.princexml.com/fonts/liberation/index.css) all;
+
+@media screen {
+  html { margin: 2em }
+}
+
+@page {
+  size: a4;
+  /*marks: crop cross;*/
+  margin: 5mm 15mm 5mm 15mm;
+  
+  /*border-bottom: thin solid black;*/
+  padding-bottom: 0.5em;
+
+  @bottom-center {
+
+  	padding:0mm 2mm 5mm 2mm;
+
+  }
+}
+
+#water_break{
+	page-break-after: always;
+}
+
+body {
+  font: 10.7pt/1.3 "Liberation Serif", serif;
+  counter-reset: issue;
+  prince-hyphens: auto;
+  text-align: justify;
+  
+}
+
+
+p {
+  margin: 0.2em 0;
+}
+
+a { text-decoration: none; color: black }
+
+
+
+/* http */
+
+#http img { 
+  float: left;
+  padding-right: 0.3em;
+  prince-image-resolution: 150dpi;
+}
+
+
+
+/*ma styles*/
+
+table {
+
+	font: .97em/1.6em "Trebuchet MS",Verdana,sans-serif;
+	border-collapse: collapse;
+	width:100%;
+}
+
+table{
+	margin: 0 auto;
+}
+
+th,td {
+	/*border-left: 1px solid #CCC;*/
+	padding: 5px
+}
+
+
+
+thead th {
+
+	text-align: center;
+	
+}
+
+tbody th {
+	padding: 20px 10px
+}
+
+tbody tr.odd {
+	background-color: #F7F7F7;
+	color: #666
+}
+
+
+div.table_title {
+	margin: 0 auto;
+	width: 100%;
+	text-align: center;
+	/*color: #14a15f;*/
+	font-weight:bolder;
+	font-size: 1.5em;
+}
+.cat {
+	font-weight:bolder;
+	text-transform: uppercase
+
+}
+
+table.grades {
+	border: solid black 2px;
+
+}
+table.grades td, table.grades th {
+	border: solid black 1px;
+	text-align: center;
+	
+}
+
+.cat_mini {
+	font-weight: bolder;
+}
+
+.comments tr {
+	border-top: dashed black 1px;
+	border-bottom: dashed black 1px;
+}
+
+div.grade_table {
+	height: 3.25in;
+	overflow: hidden;
+	background-image:url('rgi_large_faded.jpg');
+	background-repeat:no-repeat;
+	background-position:center center; 
+}
+</style>
+
+<title>Gashora Girls Academy Grades</title>
+</head>
+<body>
+	
+<div id="water_break">This is the first page.</div>	
+{% for studentun in students %}
+	{% set s = studentun %}
+	
+
+	<div class="grade_table">
+				<div class="table_title">{% if s.currentYear %}{{ s.currentYear }}, {% endif %}{{term}} Midterm {{year}}</div>
+				<table class="student_info">
+					<tr>
+						<td><span class="cat">Student Name: </span>{{ s.firstName }} {{ s.lastName}}</td>
+						<td><span class="cat">GPA: </span>{{ s.gpa }}</td>
+					</tr>
+					<tr>
+						<td><span class="cat">Combination: </span>{{ s.combo }}</td>
+						<td><span class="cat">Advisor Name: </span>{{ s.advisor }}</td>
+					</tr>
+				</table><!--end of student info-->
+				<table class="grades">
+
+					<thead>
+						<th><span class="cat">Subject</span></th>
+						{% for grade in s.grades %}
+							<th><span class="cat">{{ grade.subject }}</span></th>
+						{% endfor %}												
+					</thead>
+
+				
+					<tr>
+						<td>Mark Out of 100</td>
+						{% for grade in s.grades %}
+							<th>{{ grade.etm }}</th>
+						{% endfor %}							
+					</tr>
+					<tr>
+						<td>Course Average</td>
+						{% for grade in s.grades %}
+							<th>{{ grade.average }}</th>
+						{% endfor %}							
+					</tr>
+
+				</table><!--grades-->
+				<table class="comments">
+					<thead>
+						<span class="cat">Comments</span>
+					</thead>
+					
+					
+					{% for grade in s.grades %}
+						{% if grade.comment %}
+						<tr>
+							<td><span class="cat_mini">{{ grade.subject }}</span></td>
+							<td>{{ grade.comment }}</td>																						
+						</tr>
+						{%endif%}
+
+					{% endfor %}	
+					
+										
+				</table><!--comments-->
+	</div> <!--end of grade_table-->
+
+
+{% endfor %}
+
+</body>
+</html>

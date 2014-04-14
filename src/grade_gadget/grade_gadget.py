@@ -14,16 +14,15 @@ import prince_report_gen
 from student_grade_data import Student
 from course_section import Section
 from user_inputs import ReportType, UserInput, AverageType
-#from user_inputs import *
-#this stuff should be collected, maybe as part of the gui
+
 
 def generate_report(userInput) :
+    #get the file paths
     school_excel_file = userInput.excel_file_location
-    grade_location = userInput.excel_file_location.replace("export.xls" , "")
-    print userInput.excel_file_location
-    print grade_location
-    grades_excel_file = grade_location + "report_sheets_"+str(userInput.year)+"_"+str(userInput.term)+".xls"
+    grade_location = os.path.dirname(userInput.excel_file_location)
+    grades_excel_file = grade_location + "\\report_sheets_"+str(userInput.year)+"_"+str(userInput.term)+".xls"
     
+    #open the file
     grades_workbook = open_workbook(grades_excel_file)
     school_workbook = open_workbook(school_excel_file)
     
@@ -36,7 +35,7 @@ def generate_report(userInput) :
     sectionsheet = school_workbook.sheet_by_name("Sections")
     enrollmentsheet = school_workbook.sheet_by_name("SectionEnrollment")
     
-    #get all of the students usernames
+    #get all of the students usernames based off of the group
     usernamesForSheets = grade_gadget_methods.getGroupMembers(userInput.group, groupssheet, userInput)
     
     #make a dictionary that matches the appropriate column types to their indexes in the sheet
@@ -69,26 +68,19 @@ def generate_report(userInput) :
     teachers = grade_gadget_methods.getMapOfTeacherUsernameToGradeName(groupssheet, peoplesheet, student_index_dic, userInput)
     
     #maps the class id to a instance of section with all the correct info
-
     classes = grade_gadget_methods.makeClassesDic(sectionsheet, teachers, sections_index_dic, userInput)
+    
+    #calculate the average for courses
     if userInput.aveType == AverageType.Course:
-        classes = grade_gadget_methods.calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic,userInput, False)
+        classes = grade_gadget_methods.calculateAveragesForCourses(classes, termgradesheet, reportsheet_index_dic,userInput)
     else:
         classes = grade_gadget_methods.calculateAveragesForSections(classes, termgradesheet, reportsheet_index_dic, userInput)
     
-    
-    print reportsheet_index_dic
-    #for c in classes:
-    #    print classes[c]
-    #for s in students:
-    #    print s
-        
     #okay, now going to add the grade information
     #for some strange reason -1, seems to be the 4th column as well
     for row in range(1,termgradesheet.nrows):
         sectionID = termgradesheet.cell(row,reportsheet_index_dic["Section ID"]).value
         studentun = termgradesheet.cell(row,reportsheet_index_dic["Student ID"]).value
-        
         
         final = termgradesheet.cell(row,reportsheet_index_dic[userInput.FINAL]).value
         etm = termgradesheet.cell(row,reportsheet_index_dic[userInput.ETM]).value
@@ -113,18 +105,16 @@ def generate_report(userInput) :
         if (userInput.includeComments and reportsheet_index_dic[userInput.COMMENT] != -1):
             comment = termgradesheet.cell(row,reportsheet_index_dic[userInput.COMMENT]).value #trying this for comment
         
-        
         try:
             students[studentun].addGrade(classes[sectionID], mtm, etm, final, comment)
             
-            #print students[studentun]
         except KeyError:
             print "DOES NOT EXIST IN GROUP: " + studentun
     
     
     #now, caluclate GPAs
-    grade_gadget_methods.calculateGPAs(students)
-    
+    grade_gadget_methods.calculateGPAs(students,userInput)
+    grade_gadget_methods.setStudentReportYear(groupssheet, userInput, students)
     filetoprint = "No File"
     if(userInput.REPORT_TYPE == ReportType.Excel) :
         filetoprint = grade_gadget_methods.createExcel(students, userInput)
@@ -132,6 +122,6 @@ def generate_report(userInput) :
     else:
         filetoprint =  prince_report_gen.generatePrinceReports(students, userInput)
     
+    #returns the file to print so the gui can say its' location
     return filetoprint
     
-    #and command line run it through prince

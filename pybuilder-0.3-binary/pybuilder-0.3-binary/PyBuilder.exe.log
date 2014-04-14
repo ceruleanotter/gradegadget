@@ -1,0 +1,35 @@
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "threading.pyc", line 442, in __bootstrap
+  File "threading.pyc", line 422, in run
+  File "data\build.pyc", line 296, in run
+IOError: [Errno 2] No such file or directory: 'screen.txt'
+
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "Tkinter.pyc", line 1345, in __call__
+  File "Tkinter.pyc", line 2732, in set
+TclError: bad option "0.952381": must be activate, cget, configure, delta, fraction, get, identify, or set
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "threading.pyc", line 442, in __bootstrap
+  File "threading.pyc", line 422, in run
+  File "data\build.pyc", line 296, in run
+IOError: [Errno 2] No such file or directory: 'screen.txt'
+
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "threading.pyc", line 442, in __bootstrap
+  File "threading.pyc", line 422, in run
+  File "data\build.pyc", line 296, in run
+IOError: [Errno 2] No such file or directory: 'screen.txt'
+
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "threading.pyc", line 442, in __bootstrap
+  File "threading.pyc", line 422, in run
+  File "data\build.pyc", line 305, in run
+  File "data\build.pyc", line 17, in write
+  File "Tkinter.pyc", line 2970, in see
+TclError: invalid command name "58.0"
+

@@ -1,14 +1,3 @@
-##---------------------------------------------------------------------------
-#
-## This is how you pre-establish a file filter so that the dialog
-## only shows the extension(s) you want it to.
-#wildcard = "Python source (*.py)|*.py|"     \
-#           "Compiled Python (*.pyc)|*.pyc|" \
-#           "SPAM files (*.spam)|*.spam|"    \
-#           "Egg file (*.egg)|*.egg|"        \
-#           "All files (*.*)|*.*"
-
-#---------------------------------------------------------------------------
 
 import wx
 import os
@@ -33,6 +22,7 @@ class GradeGadgetFrame(wx.Frame):
     This is GradeGadgetFrame.  It contains everything for the grade gadget gui.
     """
     PEACEFUL_MESSAGE = "Welcome to The Gashora Grade Gadget Report Generator"
+    #This is the default message before anything is generated.
     INFORMATIONAL_MESSAGE = ("IF NO CHANGES NEED TO BE MADE LEAVE THIS BLANK\n\n"
                              "These are advanced options; only to be changed in rare situations. \n"
                              "The Excel Headings refers to the excel file with the grades. This program "
@@ -42,11 +32,16 @@ class GradeGadgetFrame(wx.Frame):
                              "Only change this if there is an error in the headings of your Excel Grades file\n\n"
                              "The Template folder is the folder where your html template files are, you "
                              "might need to change this if the style of the reports needs to change or if you "
-                             "move your files")
+                             "move your files") 
+    #this is the message for the advanced page.
+    
     FRAME_WIDTH = 600
     FRAME_HEIGHT = 500
-    CONFIG_FILE = os.getcwd()+"\currentConfig.pkl"
-    YES_COMMENT = "Yes"
+    CONFIG_FILE = os.getcwd()+"\currentConfig.pkl" #this is a file which has the options that were last selected when grade gadget was run
+    YES_COMMENT = "Yes" #The default option for comments appearing on your grades
+    YES_FLAG = "Yes"
+    NO_FLAG = "No"
+    
     def __init__(self, *args, **kwargs):
         super(GradeGadgetFrame, self).__init__(*args, **kwargs) 
             
@@ -54,26 +49,21 @@ class GradeGadgetFrame(wx.Frame):
         
     def InitUI(self):
         
-
-        
+        #setting up the main frame
         self.programDirectory = os.getcwd()
         self.SetSize((GradeGadgetFrame.FRAME_WIDTH, GradeGadgetFrame.FRAME_HEIGHT))
         self.SetTitle('Gashora Grade Gadget -- Report Generator')
+        
+        
+        #setting up tabs
         self.parentNotebook = wx.Notebook(self, -1, size=(GradeGadgetFrame.FRAME_WIDTH,GradeGadgetFrame.FRAME_HEIGHT), style=
                              wx.BK_DEFAULT
-                             #wx.BK_TOP 
-                             #wx.BK_BOTTOM
-                             #wx.BK_LEFT
-                             #wx.BK_RIGHT
-                             # | wx.NB_MULTILINE
-                             )        
-
-        
-        
-        mainpanel = wx.Panel(self.parentNotebook)
+                             ) #The wx.Notebook is the widget with tabs
+        mainpanel = wx.Panel(self.parentNotebook) #mainpanel is the "Main Options" tab
         self.parentNotebook.AddPage(mainpanel, "Main Options")
 
 
+        #wx Sizers used for laying out everything in mainpanel
         vbox = wx.BoxSizer(wx.VERTICAL)
         row1 = wx.BoxSizer(wx.HORIZONTAL)
         row2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -81,7 +71,9 @@ class GradeGadgetFrame(wx.Frame):
         row4 = wx.BoxSizer(wx.HORIZONTAL)    
         row5 = wx.BoxSizer(wx.HORIZONTAL)    
         row6 = wx.BoxSizer(wx.HORIZONTAL)    
+        rowFM = wx.BoxSizer(wx.HORIZONTAL)
         row7 = wx.BoxSizer(wx.HORIZONTAL)
+        
         
         #row1                   
         box_chooseExport = wx.StaticBox(mainpanel, label='Choose School Export File');
@@ -105,11 +97,11 @@ class GradeGadgetFrame(wx.Frame):
         
         self.text_year = wx.StaticText(mainpanel, label='Year');
         self.year = str(datetime.datetime.now().year)
-        print self.year #!need to add change year functionality
+
         self.spin_year = wx.SpinCtrl(mainpanel, value=self.year)                
-        self.spin_year.SetRange(2010,2500)
+        self.spin_year.SetRange(2010,2500) #this is where we say how many years can be picked
         row2.Add(self.text_year,flag=wx.ALL|wx.EXPAND, border=5)        
-        row2.Add(self.spin_year,flag=wx.ALL|wx.EXPAND, border=5)  
+        row2.Add(self.spin_year,flag=wx.ALL|wx.EXPAND, border=5)
                 
         #row3
         text_group = wx.StaticText(mainpanel, label='Group');
@@ -121,7 +113,8 @@ class GradeGadgetFrame(wx.Frame):
         text_type = wx.StaticText(mainpanel, label='Type of Report');
         row4.Add(text_type,flag=wx.ALL|wx.EXPAND, border=5)  
         
-        first=True
+        first=True #we need this flag because radio buttons are grouped by setting the first one to RB_GROUP and then
+        #every one after that is considered in the same group.
         
         self.radio_buttons_report = []
         for rt in ReportType.reportTypesDic.keys():
@@ -151,17 +144,6 @@ class GradeGadgetFrame(wx.Frame):
             self.radio_buttons_average.append(cur_rb) 
         
         #row6                
-#        box_output = wx.StaticBox(mainpanel, label='Output Folder');
-#        sb_output = wx.StaticBoxSizer(box_output, wx.HORIZONTAL)
-#        
-#        self.text_ctrl_output = wx.TextCtrl(mainpanel, -1, self.currentDirectory, style=wx.TE_READONLY, name="Output Folder Path" )
-#        button_browse_output = wx.Button(mainpanel, label="Browse")
-#        
-#        sb_output.Add(self.text_ctrl_output,1,flag=wx.ALL,border=5)
-#        sb_output.Add(button_browse_output,flag=wx.ALL,border=5)
-#        
-#        row6.Add(sb_output,1, flag=wx.ALL|wx.EXPAND, border=5)
-#        
 
         text_comment = wx.StaticText(mainpanel, label='Include Comments');
         row6.Add(text_comment,flag=wx.ALL|wx.EXPAND, border=5)  
@@ -171,6 +153,21 @@ class GradeGadgetFrame(wx.Frame):
         self.radio_buttons_comment.append(wx.RadioButton(mainpanel, label="No"))
         for b in self.radio_buttons_comment:
             row6.Add(b,flag=wx.ALL|wx.EXPAND, border=5)
+
+
+        #flag missing
+        text_flagmissing = wx.StaticText(mainpanel, label='''Don't Calculate Missing Averages''');
+
+        rowFM.Add(text_flagmissing,flag=wx.ALL|wx.EXPAND, border=5)  
+        
+        self.radio_buttons_flagmissing = []
+        self.radio_buttons_flagmissing.append(wx.RadioButton(mainpanel, label=GradeGadgetFrame.YES_FLAG, style=wx.RB_GROUP))
+        self.radio_buttons_flagmissing.append(wx.RadioButton(mainpanel, label=GradeGadgetFrame.NO_FLAG))
+        for b in self.radio_buttons_flagmissing:
+            rowFM.Add(b,flag=wx.ALL|wx.EXPAND, border=5)
+
+                
+
         
         #line
         line = wx.StaticLine(mainpanel)
@@ -179,42 +176,33 @@ class GradeGadgetFrame(wx.Frame):
         button_generate = wx.Button(mainpanel, label="Generate Report")
         row7.Add(button_generate,flag=wx.BOTTOM|wx.TOP, border=5)        
         
-        #static error text
-        
+        #static error text at the bottom        
         self.error_text = wx.StaticText(mainpanel, label=self.PEACEFUL_MESSAGE)
         
-        
+        #add to horizontal rows, line and error text to the vertical box sizer
         vbox.Add(row1, flag=wx.EXPAND)
         vbox.Add(row2, flag=wx.EXPAND)
         vbox.Add(row3, flag=wx.EXPAND)
         vbox.Add(row4, flag=wx.EXPAND)
         vbox.Add(row5, flag=wx.EXPAND)        
         vbox.Add(row6, flag=wx.EXPAND)
-       
+        vbox.Add(rowFM, flag=wx.EXPAND)
         vbox.Add(line, flag=wx.EXPAND|wx.BOTTOM, border=10)
-        
         vbox.Add(row7, flag=wx.ALIGN_CENTER)        
-        
         vbox.Add(self.error_text, flag= wx.ALIGN_BOTTOM)        
         
-        
+        #add the virutal box sizer to the main panel
         mainpanel.SetSizer(vbox)
         
         #Event Stuff
-        button_browse_export.Bind(wx.EVT_BUTTON, self.onBrowseExport)
-       
-        #button_browse_output.Bind(wx.EVT_BUTTON, self.onBrowseOutputFolder)        
+        button_browse_export.Bind(wx.EVT_BUTTON, self.onBrowseExport)       
         button_generate.Bind(wx.EVT_BUTTON, self.onGenerate)
-        self.spin_year.Bind(wx.EVT_SPIN, self.onSpinYear)
+        self.spin_year.Bind(wx.EVT_SPIN, self.onSpinYear) #this is a function that figures out what groups and so on are available in a year
         
         
         #####ADVANCED OPTIONS######
         advancedpanel = wx.Panel(self.parentNotebook,)
         self.parentNotebook.AddPage(advancedpanel, "Advanced Options")
-
-        
-        
-        
         
         avbox = wx.BoxSizer(wx.VERTICAL)
         arow1 = wx.BoxSizer(wx.HORIZONTAL)
@@ -229,6 +217,7 @@ class GradeGadgetFrame(wx.Frame):
         self.a_text_control_mtm = self.makeAdvancedRewriteHeadingBox("MTM", advancedpanel, a_sb_excel_headings)
         self.a_text_control_comment = self.makeAdvancedRewriteHeadingBox("Comment", advancedpanel, a_sb_excel_headings)
         
+        #a list of the headings so that you can check if the heading was entered and exists correctly when error checking
         self.headings_list =[self.a_text_control_comment,self.a_text_control_mtm,self.a_text_control_final,self.a_text_control_etm]
 
         
@@ -255,21 +244,20 @@ class GradeGadgetFrame(wx.Frame):
         
         a_button_browse_template_location.Bind(wx.EVT_BUTTON, self.onBrowseTemplate)
 
-        
+        #loading up all the old options you had from the pickle file 
         try:
             pkl_file = open(self.CONFIG_FILE, 'rb')
             loadedui = pickle.load(pkl_file)
             self.loadConfiguration(loadedui)
         except IOError:
-            print "No file exsists"
+            print "No file exists"
         
         self.Centre()
         self.Show(True)
         
-        
+    #when the Browse Export Button is clicked
     def onBrowseExport(self, event):
             filters = 'Excel files from SchoolTool (*.xls)|*.xls'
-
             dialog = wx.FileDialog(self,
                                    message="Choose an export.xls file",
                                    defaultDir = self.programDirectory,
@@ -279,29 +267,27 @@ class GradeGadgetFrame(wx.Frame):
                                    )
             if dialog.ShowModal() == wx.ID_OK:
                 path = dialog.GetPath()
-                #some code in here to call a grade gadget method to grab the groups
                 self.setGroups(path)
                 self.setTerms(path)
-                #
                 self.text_ctrl_export.SetLabel(path)
                 print path
             dialog.Destroy()
             
+    #when the Browse Template button is clicked       
     def onBrowseTemplate(self, event):
-
             dialog = wx.DirDialog(self,
                                    message="Choose a directory",
                                    style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST| wx.DD_CHANGE_DIR,
                                    defaultPath=self.programDirectory
                                    )
             
-            
             if dialog.ShowModal() == wx.ID_OK:
                 path = dialog.GetPath()
                 self.a_text_control_template_location.SetLabel(path)
                 print path
             dialog.Destroy()
-            
+    
+    #grab the groups from the export.xls sheet
     def setGroups(self, exportfilepath):
         try:
             school_workbook = open_workbook(exportfilepath)
@@ -324,7 +310,8 @@ class GradeGadgetFrame(wx.Frame):
         except (IOError, biffh.XLRDError):
             print "Can't open the file to find the groups"
             self.combo_group.Clear()    
-            
+    
+    #grab the terms from export.xls
     def setTerms(self, exportfilepath):
         try:
             school_workbook = open_workbook(exportfilepath)
@@ -342,24 +329,7 @@ class GradeGadgetFrame(wx.Frame):
             print "Can't open the file to find the terms"
             self.combo_term.Clear()                   
 
- 
 
-
-
-#    def onBrowseOutputFolder(self, event):
-#            print "output pressed"
-#            dialog = wx.DirDialog(self,
-#                                   message="Choose a directory",
-#                                   style=wx.DD_DEFAULT_STYLE | wx.DD_DIR_MUST_EXIST| wx.DD_CHANGE_DIR,
-#                                   defaultPath=self.currentDirectory
-#                                   )
-#            
-#            if dialog.ShowModal() == wx.ID_OK:
-#                path = dialog.GetPath()
-#                self.text_ctrl_output.SetLabel(path)
-#                print path
-#            dialog.Destroy()
-#            
     def onSpinYear(self, event):
         self.year = self.spin_year.GetValue()
         #update the groups based on the year
@@ -369,14 +339,11 @@ class GradeGadgetFrame(wx.Frame):
         print self.year
     
     
-    
-    
-    
     def onGenerate(self, event):
         #clear error stylings
         self.clearErrorStylings()
         
-        
+        #just a while loop so that we can break at any point when an error is found. This doesn't actually loop.
         while(True):
             #error checking
             problemChildren = []
@@ -390,7 +357,6 @@ class GradeGadgetFrame(wx.Frame):
             if not( os.access(self.text_ctrl_export.GetValue(), os.F_OK)):
                 problemChildren.append((self.text_ctrl_export, "You did not choose a valid export.xls file"))
                 break
-
             
             #term
             checkterm = self.combo_term.GetValue()
@@ -405,10 +371,12 @@ class GradeGadgetFrame(wx.Frame):
     
                 
             #now check if there is a grade file in this same folder
-            grades_location = export_location.replace("export.xls","")
-            grades_location += ("report_sheets_"+str(year)+"_"+str(term)+".xls")
+            
+            grades_location = os.path.dirname(export_location)            
+            grades_location += ("\\report_sheets_"+str(year)+"_"+str(term)+".xls")
+            print "Path to report sheets is --- " + grades_location
             if not( os.access(grades_location, os.F_OK)):
-                problemChildren.append((self.text_ctrl_export, "You might need to move your files; there is no file report_sheets_"+str(year)+"_"+str(term)+".xls in the export folder"))
+                problemChildren.append((self.text_ctrl_export, "You might need to move your files; there is no file report_sheets_"+str(year)+"_"+str(term)+".xls in the same folder as export.xls folder"))
             
             #group
             group = self.combo_group.GetValue()
@@ -422,6 +390,7 @@ class GradeGadgetFrame(wx.Frame):
                     print "Report type is: "
                     print repType
                     break;
+            
             #average calculation type
             for b in self.radio_buttons_average:
                 if b.GetValue() == True:
@@ -436,40 +405,37 @@ class GradeGadgetFrame(wx.Frame):
                     includeComment = (b.GetLabel() == GradeGadgetFrame.YES_COMMENT)
                     break;
             
-#            #htmlOutputDir
-#            htmlOutputDir = self.text_ctrl_output.GetValue()
-#            #print self.text_ctrl_output.GetValue()
-#            if not( os.access(self.text_ctrl_output.GetValue(), os.F_OK)):
-#                problemChildren.append((self.text_ctrl_output, "You did not select a good output folder; The output folder you selected doesn't exsist or you do not have the right permissions"))
-#            
-            htmlOutputDir = export_location.replace("export.xls","")
-            htmlOutputDir += "GENERATED\\"
+            #whether to flag missing grades
+            for b in self.radio_buttons_flagmissing:
+                if b.GetValue() == True:
+                    flagMissing = (b.GetLabel() == GradeGadgetFrame.YES_FLAG)
+                    break;
+            
+            htmlOutputDir = os.path.dirname(export_location)
+            htmlOutputDir += "\\GENERATED\\"
             print htmlOutputDir
             if not os.access(htmlOutputDir, os.F_OK):
                 os.mkdir(htmlOutputDir)
                 #move the picture over
                 
             else:
-                print "the generated directory already exsists"
+                print "the generated directory already exists"
 
             
             noerror = self.errorCheckAdvancedStuff(grades_location, term)
             
+            #if there are errors, print them
             if noerror != 0:
                 problemChildren.append(noerror)
     
             break;
-            #error check advanced stuff
     
-        #additional error checking of the sheets, whether the export sheet is called export
-        #maybe here check whether there is a grade sheet for the correct term in that directory
-        
-        #create userinputs
-
+        #If there are errors, change the stylings
         if len(problemChildren) != 0:
             self.clearErrorStylings()
             self.setErrorStylings(problemChildren)
         else:
+            #otherwise there are no errors, make a new user inputs
             uIs = UserInput(export_location = export_location,
                             year= year,
                             term = term,
@@ -478,12 +444,14 @@ class GradeGadgetFrame(wx.Frame):
                             repType = repType,
                             aveType = aveType,
                             htmlOutputDir = htmlOutputDir,
-                            includeComments = includeComment)
+                            includeComments = includeComment,
+                            programDir = self.programDirectory,
+                            flagMissing = flagMissing)
             #deal with advanced stuff
             self.setAdvancedStuff(uIs)
             print "MADE UI"
             
-            #need to do this now, after the uI's is made and corrected; this is where we move the picture for the templates folder
+            #fter the uI's is made and corrected; this is where we move the picture for the templates folder
             try:
                 shutil.copy(uIs.TEMPLATES_FOLDER+"/rwanda_girls_resize_sun_only.jpg", uIs.HTML_OUTPUT_FOLDER+"rwanda_girls_resize_sun_only.jpg")
                 shutil.copy(uIs.TEMPLATES_FOLDER+"/rgi_large_faded.jpg", uIs.HTML_OUTPUT_FOLDER+"rgi_large_faded.jpg")            
@@ -491,8 +459,6 @@ class GradeGadgetFrame(wx.Frame):
                 print "couldn't copy RGI logo"
             #overwrite and pickle it
             self.storeNewConfiguration(uIs)
-            #when the UI is stored
-            print "When the UI is stored it is " + uIs.TEMPLATES_FOLDER
             filegenerated = generate_report(uIs)
             self.error_text.SetLabel("Generated file in:\n" + filegenerated )
             
@@ -503,6 +469,7 @@ class GradeGadgetFrame(wx.Frame):
         for pc in problemChildren:
             message = pc[1]
             pc = pc[0]
+            #code for putting a start next to the combo boxes
             if isinstance(pc, wx.ComboBox):
                 sizer = pc.GetContainingSizer()
                 if sizer != None:
@@ -512,7 +479,7 @@ class GradeGadgetFrame(wx.Frame):
                         if isinstance(s, wx.StaticText) and s.GetLabel() == "Term" or s.GetLabel() == "Group":                            
                             s.SetLabel("*"+s.GetLabelText())
                         
-                    print "it's a combobox"
+                    
             pc.SetBackgroundColour(wx.RED)
             errorstring += (message + "\n")
             
@@ -524,15 +491,11 @@ class GradeGadgetFrame(wx.Frame):
         self.Refresh()
     
 
-        #clean everything up
-        #set error stylings for all the problem children
     def clearErrorStylings(self):
         allitems = self.GetChildren()[0].GetChildren()
         mainpanelc = allitems[0].GetChildren()
         advancedpanelc = allitems[1].GetChildren()
-        
-        print mainpanelc
-        print advancedpanelc
+        #remove stars and red
         for i in mainpanelc:
             i.SetBackgroundColour(wx.NullColour)
             curLabel = i.GetLabel()
@@ -543,11 +506,10 @@ class GradeGadgetFrame(wx.Frame):
             curLabel = i.GetLabel()
             curLabel = curLabel.replace("*","")
             i.SetLabel(curLabel)
+        #back to normal message
         self.error_text.SetLabel(GradeGadgetFrame.PEACEFUL_MESSAGE)
-                            
-        #self.text_ctrl_export.SetBackgroundColour(wx.NullColour)
-        #self.Refresh()
-        #return
+
+    #a function to help quickly make the very similar labels and text boxes on the advanced page
     def makeAdvancedRewriteHeadingBox(self, heading, advancedpanel, a_static_box_for_headings):
         a_heading_row = wx.BoxSizer(wx.HORIZONTAL)
         
@@ -569,7 +531,7 @@ class GradeGadgetFrame(wx.Frame):
         except (IOError, biffh.XLRDError):
             print "Can't open or get the file " + gradesfilepath
             return (self.text_ctrl_export, "Please choose a different export file; can't open it to check whether you advanced choices are OK")        
-
+        #looks through the headings to make sure they exist in the export.xls you chose
         for h in self.headings_list :
                 if h.GetValue().strip() != "":
                     foundMatchingHeading = False
@@ -580,9 +542,6 @@ class GradeGadgetFrame(wx.Frame):
                     if not foundMatchingHeading:
                         return(h, "You types an incorrect heading. Please fix your heading(s) in the advanced tab. You can trying Copy Pasting from the Excel sheet")
         return 0            
-                            
-                    
-        
         
     def setAdvancedStuff(self,ui):
         if (self.a_text_control_etm.GetValue().strip() != ""):
@@ -594,20 +553,27 @@ class GradeGadgetFrame(wx.Frame):
         if (self.a_text_control_comment.GetValue().strip() != ""):
             ui.setCOMMENT(self.a_text_control_comment.GetValue())
         if (self.a_text_control_template_location.GetValue().strip() != ""):
-            #print "should have changed templates folder"
             ui.setTEMPLATES_FOLDER(self.a_text_control_template_location.GetValue())
         
     def storeNewConfiguration(self, ui):
         outputfile = open(self.CONFIG_FILE,'wb')
         pickle.dump(ui, outputfile)
         outputfile.close()
+    def setSpinYearValue(self, spinyear):
+        self.year = spinyear
+        self.spin_year.SetValue(spinyear)
+        
+    #loading up a configuration from a de-pickled file
     def loadConfiguration(self, ui):
+        #need to set the year and excel sheet before the terms and groups since terms and groups rely on that info
         self.text_ctrl_export.SetValue(ui.excel_file_location)
+        self.setSpinYearValue(int(ui.year))
+        
         self.setTerms(ui.excel_file_location)
         self.setGroups(ui.excel_file_location)
         self.combo_term.SetValue(ui.termTitle)
-        self.spin_year.SetValue(int(ui.year))
         self.combo_group.SetValue(ui.group)
+        
         for b in self.radio_buttons_report:
             if ReportType.reportTypesDic[b.GetLabel()] == ui.REPORT_TYPE :
                 b.SetValue(True)
@@ -616,8 +582,9 @@ class GradeGadgetFrame(wx.Frame):
             if AverageType.aveTypesDic[b.GetLabel()] == ui.aveType :
                 b.SetValue(True)
                 break
-        #make a generic ui to compare the loaded config with
-        uicopy = ui.copy()
+        #make a generic ui to compare the loaded config. We need to do this in case myself or someone else changes
+        #the defaults for the ETM MTM FINAL etc headings
+        uicopy = ui.copy(self.programDirectory)
         if uicopy.ETM != ui.ETM:
             self.a_text_control_etm.SetValue(ui.ETM)
         if uicopy.MTM != ui.MTM:
@@ -632,5 +599,3 @@ class GradeGadgetFrame(wx.Frame):
 app = wx.App(0) # 0 makes it go to standard output instead of the gui window
 GradeGadgetFrame(None)
 app.MainLoop()
-#app = MyApp(redirect=True)
-#app.MainLoop()
