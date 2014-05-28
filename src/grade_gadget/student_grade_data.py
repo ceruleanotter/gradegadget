@@ -56,7 +56,8 @@ class Student(object):
         for g in self.grades:
             gradesoutput += str(g)
             gradesoutput += "\n"
-        return self.firstName + " " + self.lastName + ", Combo: " + self.combo + " Grades: " + gradesoutput
+            
+        return str(self.firstName) + " " + str(self.lastName) + ", Combo: " + str(self.combo) + " Grades: " + str(gradesoutput)
     
     class Grade(object):
         def __init__(self, subject, mtm, etm,final,ave,teacher,comment,course):

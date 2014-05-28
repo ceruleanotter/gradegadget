@@ -12,15 +12,15 @@ Rp4
 (dp5
 S'COMMENT'
 p6
-S'End of Term Marks for Term 1 2014 / Student Comment'
+S'End of Term Marks for Term 3 2013 / Student Comment'
 p7
 sS'HTML_OUTPUT_FOLDER'
 p8
-VC:\u005cUsers\u005cLyla\u005cDesktop\u005cSchoolToolExcelSheets\u005cPaulinErrorSheets\u005cGENERATED\u005c
+VC:\u005cUsers\u005cLyla\u005cDocuments\u005cGGAST\u005cTechnician\u005cgrade_generator\u005cPython_Report_Generator\u005cCompiled_Binaries\u005cGradeGadget_Binary_v_1.1_5_27_2014\u005cExported_Data_From_SchoolTool\u005cGENERATED\u005c
 p9
 sS'term'
 p10
-Vterm-1
+Vterm-3
 p11
 sS'group'
 p12
@@ -28,11 +28,11 @@ VStudents
 p13
 sS'termTitle'
 p14
-VTerm 1
+VTerm 3
 p15
 sS'MTM'
 p16
-VMidterm Marks / Midterm Mark
+S'Midterm Marks Term for Term 3 2013 / Midterm Mark'
 p17
 sS'TEMPLATES_FOLDER'
 p18
@@ -44,10 +44,10 @@ S'Combination'
 p21
 sS'includeComments'
 p22
-I00
+I01
 sS'FINAL'
 p23
-S'End of Term Marks for Term 1 2014 / Term Exam Mark'
+S'End of Term Marks for Term 3 2013 / Term Exam Mark'
 p24
 sS'ADVISOR'
 p25
@@ -59,22 +59,22 @@ S'Teachers'
 p28
 sS'REPORT_TYPE'
 p29
-I0
+I1
 sS'year'
 p30
-I2014
+I2013
 sS'flagMissing'
 p31
-I00
+I01
 sS'excel_file_location'
 p32
-VC:\u005cUsers\u005cLyla\u005cDesktop\u005cSchoolToolExcelSheets\u005cPaulinErrorSheets\u005cexport.xls
+VC:\u005cUsers\u005cLyla\u005cDocuments\u005cGGAST\u005cTechnician\u005cgrade_generator\u005cPython_Report_Generator\u005cCompiled_Binaries\u005cGradeGadget_Binary_v_1.1_5_27_2014\u005cExported_Data_From_SchoolTool\u005cexport.xls
 p33
 sS'aveType'
 p34
-I0
+I1
 sS'ETM'
 p35
-S'End of Term Marks for Term 1 2014 / End of Term Mark'
+S'End of Term Marks for Term 3 2013 / End of Term Mark'
 p36
 sb.

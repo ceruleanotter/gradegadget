@@ -540,7 +540,7 @@ class GradeGadgetFrame(wx.Frame):
                             foundMatchingHeading = True
                             break
                     if not foundMatchingHeading:
-                        return(h, "You types an incorrect heading. Please fix your heading(s) in the advanced tab. You can trying Copy Pasting from the Excel sheet")
+                        return(h, "You typed an incorrect heading. Please fix your heading(s) in the advanced tab.\n You can try Copying and Pasting from the Excel sheet")
         return 0            
         
     def setAdvancedStuff(self,ui):
