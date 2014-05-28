@@ -362,7 +362,7 @@ class GradeGadgetFrame(wx.Frame):
             checkterm = self.combo_term.GetValue()
             term = ""
             if checkterm == "":
-                problemChildren.append((self.combo_term,"You did not select a term; if there are no groups available, make sure the year/export file are correct"))
+                problemChildren.append((self.combo_term,"You did not select a term; if there are no terms available, make sure the year/export file are correct"))
                 break
             else:
                 termtuple = self.combo_term.GetClientData(self.combo_term.GetSelection())
@@ -485,7 +485,7 @@ class GradeGadgetFrame(wx.Frame):
             
         if self.combo_term.IsEmpty() or self.combo_group.IsEmpty():
             self.text_year.SetLabel("*"+self.text_year.GetLabelText())
-            errorstring += ("You might not have selected a good year; Please select a different year that has terms and groups \n")
+            errorstring += ("You might not have selected a good year; Please select a different year that has terms and groups. \n")
         self.error_text.SetLabel(errorstring)
         
         self.Refresh()
@@ -530,7 +530,7 @@ class GradeGadgetFrame(wx.Frame):
             
         except (IOError, biffh.XLRDError):
             print "Can't open or get the file " + gradesfilepath
-            return (self.text_ctrl_export, "Please choose a different export file; can't open it to check whether you advanced choices are OK")        
+            return (self.text_ctrl_export, "Please choose a different export file; /n Grade Gadget can't open it to check whether your advanced choices are OK")        
         #looks through the headings to make sure they exist in the export.xls you chose
         for h in self.headings_list :
                 if h.GetValue().strip() != "":
@@ -540,7 +540,7 @@ class GradeGadgetFrame(wx.Frame):
                             foundMatchingHeading = True
                             break
                     if not foundMatchingHeading:
-                        return(h, "You typed an incorrect heading. Please fix your heading(s) in the advanced tab.\n You can try Copying and Pasting from the Excel sheet")
+                        return(h, "You typed an incorrect heading. Please fix your heading(s) in the advanced tab.\n It is best to copy and paste the heading from the Excel sheet")
         return 0            
         
     def setAdvancedStuff(self,ui):
