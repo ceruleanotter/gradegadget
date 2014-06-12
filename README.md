@@ -22,6 +22,7 @@ I’ve included a sample export .xls sheet and grade data sheets from SchoolTool
 
 #Usage
 To get started:
+
 1. Download the zip file and extract it
 2. Run the Gashora Grade Gadget.exe file
 3. Click on the Browse button.
